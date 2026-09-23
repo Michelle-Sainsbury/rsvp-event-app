@@ -74,13 +74,15 @@ button:hover {
 
 .search-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   margin: 12px 0;
 }
 
 .search-field {
   position: relative;
-  flex: 1;
+  width: 240px;
+  max-width: 100%;
 }
 
 .search-field input {
