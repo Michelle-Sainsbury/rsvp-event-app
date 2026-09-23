@@ -56,6 +56,7 @@ app.innerHTML = `
   <section class="ticket">
     <h2>Registration Complete!</h2>
     <p><strong>${name}</strong>, you're registered for Community Tech Night.</p>
+    <p><strong>Email:</strong> ${email}</p>
     <p>Your digital ticket:</p>
     <div id="qrcode"></div>
     <p><strong>Ticket ID:</strong> ${ticketId}</p>
@@ -65,3 +66,4 @@ app.innerHTML = `
 new QRCode(document.getElementById("qrcode"), ticketId);
 });
 });
+
