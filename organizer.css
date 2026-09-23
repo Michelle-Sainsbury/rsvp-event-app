@@ -72,6 +72,38 @@ button:hover {
   color: #c5221f;
 }
 
+.dev-panel {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px dashed #aaa;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.dev-panel-label {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dev-panel-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dev-scan-btn {
+  background: #6b7280;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+}
+
+.dev-scan-btn:hover {
+  background: #4b5563;
+}
+
 .search-row {
   display: flex;
   flex-wrap: wrap;

@@ -116,6 +116,25 @@ function render() {
           ? `<p class="checkin-message ${checkInMessage.type}">${checkInMessage.text}</p>`
           : ""
       }
+
+      <div class="dev-panel">
+        <p class="dev-panel-label">Dev tools: simulate scanning a QR code</p>
+        <div class="dev-panel-buttons">
+          ${mockAttendees
+            .map(
+              (a) => `
+            <button
+              class="dev-scan-btn"
+              type="button"
+              data-payload="${a.eventId}:${a.attendeeId}:${a.registrationId}"
+            >
+              Scan ${a.name}
+            </button>
+          `
+            )
+            .join("")}
+        </div>
+      </div>
     </section>
 
     <section class="attendee-list-card">
@@ -201,6 +220,14 @@ function wireUpEvents() {
     if (e.key === "Enter") {
       checkInAttendee(e.target.value);
     }
+  });
+
+  document.querySelectorAll(".dev-scan-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const payload = btn.getAttribute("data-payload");
+      document.getElementById("qrInput").value = payload;
+      checkInAttendee(payload);
+    });
   });
 }
 
