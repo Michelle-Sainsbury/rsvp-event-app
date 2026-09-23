@@ -42,7 +42,16 @@ registrationForm.addEventListener("submit", (event) => {
   const email = document.getElementById("email").value;
   
   const ticketId = `RSVP-${Date.now()}`;
+const attendee = {
+  name: name,
+  email: email,
+  ticketId: ticketId,
+  checkedIn: false
+};
 
+const attendees = JSON.parse(localStorage.getItem("rsvpAttendees")) || [];
+attendees.push(attendee);
+localStorage.setItem("rsvpAttendees", JSON.stringify(attendees));
 app.innerHTML = `
   <section class="ticket">
     <h2>Registration Complete!</h2>
