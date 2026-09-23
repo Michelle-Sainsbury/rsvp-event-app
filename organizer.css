@@ -112,14 +112,6 @@ button:hover {
   margin-top: 0;
 }
 
-.dev-scan-btn-bad {
-  background: #c5221f;
-}
-
-.dev-scan-btn-bad:hover {
-  background: #a11712;
-}
-
 .search-row {
   display: flex;
   flex-wrap: wrap;

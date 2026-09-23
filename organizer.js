@@ -137,10 +137,10 @@ function render() {
 
         <p class="dev-panel-label">Dev tools: simulate a bad scan</p>
         <div class="dev-panel-buttons">
-          <button class="dev-scan-btn dev-scan-btn-bad" type="button" data-payload="evt9:att9:reg9">
+          <button class="dev-scan-btn" type="button" data-payload="evt9:att9:reg9">
             Scan unknown registration
           </button>
-          <button class="dev-scan-btn dev-scan-btn-bad" type="button" data-payload="not-a-real-qr-code">
+          <button class="dev-scan-btn" type="button" data-payload="not-a-real-qr-code">
             Scan malformed code
           </button>
         </div>
