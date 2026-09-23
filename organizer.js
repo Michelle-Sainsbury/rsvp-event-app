@@ -10,8 +10,6 @@ const mockAttendees = [
 
 let nameSearchTerm = "";
 let emailSearchTerm = "";
-let nameSuggestionsOpen = false;
-let emailSuggestionsOpen = false;
 let checkInMessage = null; // { type: "success" | "error", text: string }
 
 function parseQrPayload(raw) {
@@ -69,52 +67,22 @@ function checkInAttendee(raw) {
   render();
 }
 
-function getFilteredAttendees() {
-  const nameTerm = nameSearchTerm.toLowerCase();
-  const emailTerm = emailSearchTerm.toLowerCase();
-  return mockAttendees.filter(
-    (a) =>
-      a.name.toLowerCase().includes(nameTerm) &&
-      a.email.toLowerCase().includes(emailTerm)
-  );
-}
-
+// The attendee table always shows everyone. Search boxes only drive the
+// suggestion dropdowns below them — they don't filter this list.
 function getSuggestions(term, field) {
-  const t = term.toLowerCase();
+  const t = term.trim().toLowerCase();
   if (!t) return [];
   return mockAttendees
     .filter((a) => a[field].toLowerCase().includes(t))
     .slice(0, 5);
 }
 
-// Re-rendering replaces the whole #organizerApp subtree on every keystroke,
-// which would otherwise kick focus out of whichever input the user is
-// typing in. Save focus + cursor position before render and restore it after.
-function withPreservedFocus(renderFn) {
-  const active = document.activeElement;
-  const activeId = active && active.id;
-  const selectionStart = active && "selectionStart" in active ? active.selectionStart : null;
-  const selectionEnd = active && "selectionEnd" in active ? active.selectionEnd : null;
-
-  renderFn();
-
-  if (activeId) {
-    const restored = document.getElementById(activeId);
-    if (restored) {
-      restored.focus();
-      if (selectionStart !== null && selectionEnd !== null && "setSelectionRange" in restored) {
-        restored.setSelectionRange(selectionStart, selectionEnd);
-      }
-    }
-  }
-}
-
-function renderSuggestions(term, field, suggestionsId) {
+function renderSuggestions(term, field) {
   const suggestions = getSuggestions(term, field);
   if (!suggestions.length) return "";
 
   return `
-    <ul id="${suggestionsId}" class="suggestion-list">
+    <ul class="suggestion-list">
       ${suggestions
         .map(
           (a) => `<li class="suggestion-item" data-field="${field}" data-value="${a[field]}">${a[field]}</li>`
@@ -126,7 +94,6 @@ function renderSuggestions(term, field, suggestionsId) {
 
 function render() {
   const app = document.getElementById("organizerApp");
-  const attendees = getFilteredAttendees();
   const checkedInCount = mockAttendees.filter((a) => a.status === "checked-in").length;
 
   app.innerHTML = `
@@ -154,7 +121,7 @@ function render() {
     <section class="attendee-list-card">
       <h2>Registered Attendees</h2>
       <div class="search-row">
-        <div class="search-field">
+        <div class="search-field" data-field="name">
           <input
             id="nameSearchInput"
             type="text"
@@ -162,10 +129,10 @@ function render() {
             placeholder="Search by name"
             value="${nameSearchTerm}"
           />
-          ${nameSuggestionsOpen ? renderSuggestions(nameSearchTerm, "name", "nameSuggestions") : ""}
+          <div id="nameSuggestions">${renderSuggestions(nameSearchTerm, "name")}</div>
         </div>
 
-        <div class="search-field">
+        <div class="search-field" data-field="email">
           <input
             id="emailSearchInput"
             type="text"
@@ -173,7 +140,7 @@ function render() {
             placeholder="Search by email"
             value="${emailSearchTerm}"
           />
-          ${emailSuggestionsOpen ? renderSuggestions(emailSearchTerm, "email", "emailSuggestions") : ""}
+          <div id="emailSuggestions">${renderSuggestions(emailSearchTerm, "email")}</div>
         </div>
       </div>
       <table>
@@ -185,7 +152,7 @@ function render() {
           </tr>
         </thead>
         <tbody>
-          ${attendees
+          ${mockAttendees
             .map(
               (a) => `
             <tr>
@@ -198,54 +165,32 @@ function render() {
             .join("")}
         </tbody>
       </table>
-      ${attendees.length === 0 ? '<p class="hint">No attendees match your search.</p>' : ""}
     </section>
   `;
 
+  wireUpEvents();
+}
+
+// Instead of re-rendering the whole page on every keystroke (which destroys
+// and recreates the focused input, breaking typing), we only patch the
+// suggestion list for the field being typed in.
+function wireUpEvents() {
   const nameSearchInput = document.getElementById("nameSearchInput");
   const emailSearchInput = document.getElementById("emailSearchInput");
 
   nameSearchInput.addEventListener("input", (e) => {
     nameSearchTerm = e.target.value;
-    nameSuggestionsOpen = true;
-    withPreservedFocus(render);
+    document.getElementById("nameSuggestions").innerHTML = renderSuggestions(nameSearchTerm, "name");
+    wireUpSuggestionClicks();
   });
 
   emailSearchInput.addEventListener("input", (e) => {
     emailSearchTerm = e.target.value;
-    emailSuggestionsOpen = true;
-    withPreservedFocus(render);
+    document.getElementById("emailSuggestions").innerHTML = renderSuggestions(emailSearchTerm, "email");
+    wireUpSuggestionClicks();
   });
 
-  nameSearchInput.addEventListener("blur", () => {
-    // Delay so a click on a suggestion registers before the list disappears.
-    setTimeout(() => {
-      nameSuggestionsOpen = false;
-      render();
-    }, 150);
-  });
-
-  emailSearchInput.addEventListener("blur", () => {
-    setTimeout(() => {
-      emailSuggestionsOpen = false;
-      render();
-    }, 150);
-  });
-
-  document.querySelectorAll(".suggestion-item").forEach((item) => {
-    item.addEventListener("mousedown", (e) => {
-      const field = e.target.getAttribute("data-field");
-      const value = e.target.getAttribute("data-value");
-      if (field === "name") {
-        nameSearchTerm = value;
-        nameSuggestionsOpen = false;
-      } else {
-        emailSearchTerm = value;
-        emailSuggestionsOpen = false;
-      }
-      render();
-    });
-  });
+  wireUpSuggestionClicks();
 
   document.getElementById("checkInBtn").addEventListener("click", () => {
     const input = document.getElementById("qrInput");
@@ -259,4 +204,34 @@ function render() {
   });
 }
 
+function wireUpSuggestionClicks() {
+  document.querySelectorAll(".suggestion-item").forEach((item) => {
+    item.addEventListener("click", () => {
+      const field = item.getAttribute("data-field");
+      const value = item.getAttribute("data-value");
+      if (field === "name") {
+        nameSearchTerm = value;
+        document.getElementById("nameSearchInput").value = value;
+        document.getElementById("nameSuggestions").innerHTML = "";
+      } else {
+        emailSearchTerm = value;
+        document.getElementById("emailSearchInput").value = value;
+        document.getElementById("emailSuggestions").innerHTML = "";
+      }
+    });
+  });
+}
+
+function handleOutsideClick(e) {
+  if (!e.target.closest('[data-field="name"]')) {
+    const list = document.getElementById("nameSuggestions");
+    if (list) list.innerHTML = "";
+  }
+  if (!e.target.closest('[data-field="email"]')) {
+    const list = document.getElementById("emailSuggestions");
+    if (list) list.innerHTML = "";
+  }
+}
+
+document.addEventListener("click", handleOutsideClick);
 render();
