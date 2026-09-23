@@ -8,6 +8,13 @@ const mockAttendees = [
   { eventId: "evt1", attendeeId: "att4", registrationId: "reg4", name: "Casey Kim", email: "casey@example.com", status: "registered" },
 ];
 
+// Dev-only: names that look like real attendees but whose IDs don't match
+// anyone in mockAttendees, so their "Scan" button always fails check-in.
+const devFakeAttendees = [
+  { eventId: "evt9", attendeeId: "att9", registrationId: "reg9", name: "Alex Rivera" },
+  { eventId: "evt1", attendeeId: "att1", registrationId: "reg999", name: "Taylor Morgan" },
+];
+
 let nameSearchTerm = "";
 let emailSearchTerm = "";
 let checkInMessage = null; // { type: "success" | "error", text: string }
@@ -120,7 +127,7 @@ function render() {
       <div class="dev-panel">
         <p class="dev-panel-label">Dev tools: simulate scanning a QR code</p>
         <div class="dev-panel-buttons">
-          ${mockAttendees
+          ${[...mockAttendees, ...devFakeAttendees]
             .map(
               (a) => `
             <button
@@ -133,16 +140,6 @@ function render() {
           `
             )
             .join("")}
-        </div>
-
-        <p class="dev-panel-label">Dev tools: simulate a bad scan</p>
-        <div class="dev-panel-buttons">
-          <button class="dev-scan-btn" type="button" data-payload="evt9:att9:reg9">
-            Scan unknown registration
-          </button>
-          <button class="dev-scan-btn" type="button" data-payload="not-a-real-qr-code">
-            Scan malformed code
-          </button>
         </div>
       </div>
     </section>
