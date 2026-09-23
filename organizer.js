@@ -8,7 +8,10 @@ const mockAttendees = [
   { eventId: "evt1", attendeeId: "att4", registrationId: "reg4", name: "Casey Kim", email: "casey@example.com", status: "registered" },
 ];
 
-let searchTerm = "";
+let nameSearchTerm = "";
+let emailSearchTerm = "";
+let nameSuggestionsOpen = false;
+let emailSuggestionsOpen = false;
 let checkInMessage = null; // { type: "success" | "error", text: string }
 
 function parseQrPayload(raw) {
@@ -67,13 +70,58 @@ function checkInAttendee(raw) {
 }
 
 function getFilteredAttendees() {
-  const term = searchTerm.toLowerCase();
-  if (!term) return mockAttendees;
+  const nameTerm = nameSearchTerm.toLowerCase();
+  const emailTerm = emailSearchTerm.toLowerCase();
   return mockAttendees.filter(
     (a) =>
-      a.name.toLowerCase().includes(term) ||
-      a.email.toLowerCase().includes(term)
+      a.name.toLowerCase().includes(nameTerm) &&
+      a.email.toLowerCase().includes(emailTerm)
   );
+}
+
+function getSuggestions(term, field) {
+  const t = term.toLowerCase();
+  if (!t) return [];
+  return mockAttendees
+    .filter((a) => a[field].toLowerCase().includes(t))
+    .slice(0, 5);
+}
+
+// Re-rendering replaces the whole #organizerApp subtree on every keystroke,
+// which would otherwise kick focus out of whichever input the user is
+// typing in. Save focus + cursor position before render and restore it after.
+function withPreservedFocus(renderFn) {
+  const active = document.activeElement;
+  const activeId = active && active.id;
+  const selectionStart = active && "selectionStart" in active ? active.selectionStart : null;
+  const selectionEnd = active && "selectionEnd" in active ? active.selectionEnd : null;
+
+  renderFn();
+
+  if (activeId) {
+    const restored = document.getElementById(activeId);
+    if (restored) {
+      restored.focus();
+      if (selectionStart !== null && selectionEnd !== null && "setSelectionRange" in restored) {
+        restored.setSelectionRange(selectionStart, selectionEnd);
+      }
+    }
+  }
+}
+
+function renderSuggestions(term, field, suggestionsId) {
+  const suggestions = getSuggestions(term, field);
+  if (!suggestions.length) return "";
+
+  return `
+    <ul id="${suggestionsId}" class="suggestion-list">
+      ${suggestions
+        .map(
+          (a) => `<li class="suggestion-item" data-field="${field}" data-value="${a[field]}">${a[field]}</li>`
+        )
+        .join("")}
+    </ul>
+  `;
 }
 
 function render() {
@@ -105,7 +153,29 @@ function render() {
 
     <section class="attendee-list-card">
       <h2>Registered Attendees</h2>
-      <input id="searchInput" type="text" placeholder="Search by name or email" value="${searchTerm}" />
+      <div class="search-row">
+        <div class="search-field">
+          <input
+            id="nameSearchInput"
+            type="text"
+            autocomplete="off"
+            placeholder="Search by name"
+            value="${nameSearchTerm}"
+          />
+          ${nameSuggestionsOpen ? renderSuggestions(nameSearchTerm, "name", "nameSuggestions") : ""}
+        </div>
+
+        <div class="search-field">
+          <input
+            id="emailSearchInput"
+            type="text"
+            autocomplete="off"
+            placeholder="Search by email"
+            value="${emailSearchTerm}"
+          />
+          ${emailSuggestionsOpen ? renderSuggestions(emailSearchTerm, "email", "emailSuggestions") : ""}
+        </div>
+      </div>
       <table>
         <thead>
           <tr>
@@ -132,9 +202,49 @@ function render() {
     </section>
   `;
 
-  document.getElementById("searchInput").addEventListener("input", (e) => {
-    searchTerm = e.target.value;
-    render();
+  const nameSearchInput = document.getElementById("nameSearchInput");
+  const emailSearchInput = document.getElementById("emailSearchInput");
+
+  nameSearchInput.addEventListener("input", (e) => {
+    nameSearchTerm = e.target.value;
+    nameSuggestionsOpen = true;
+    withPreservedFocus(render);
+  });
+
+  emailSearchInput.addEventListener("input", (e) => {
+    emailSearchTerm = e.target.value;
+    emailSuggestionsOpen = true;
+    withPreservedFocus(render);
+  });
+
+  nameSearchInput.addEventListener("blur", () => {
+    // Delay so a click on a suggestion registers before the list disappears.
+    setTimeout(() => {
+      nameSuggestionsOpen = false;
+      render();
+    }, 150);
+  });
+
+  emailSearchInput.addEventListener("blur", () => {
+    setTimeout(() => {
+      emailSuggestionsOpen = false;
+      render();
+    }, 150);
+  });
+
+  document.querySelectorAll(".suggestion-item").forEach((item) => {
+    item.addEventListener("mousedown", (e) => {
+      const field = e.target.getAttribute("data-field");
+      const value = e.target.getAttribute("data-value");
+      if (field === "name") {
+        nameSearchTerm = value;
+        nameSuggestionsOpen = false;
+      } else {
+        emailSearchTerm = value;
+        emailSuggestionsOpen = false;
+      }
+      render();
+    });
   });
 
   document.getElementById("checkInBtn").addEventListener("click", () => {
