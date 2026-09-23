@@ -1,3 +1,4 @@
+.event-info-card,
 .summary-card,
 .checkin-card,
 .attendee-list-card {
@@ -6,6 +7,15 @@
   border-radius: 8px;
   padding: 20px 24px;
   margin-bottom: 20px;
+}
+
+.event-info-card h2 {
+  margin: 0 0 8px;
+}
+
+.event-info-card p {
+  margin: 4px 0;
+  color: #444;
 }
 
 .summary-count {

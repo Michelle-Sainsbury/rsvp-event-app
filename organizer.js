@@ -1,3 +1,11 @@
+// Mock event data. Matches the event shown on index.html; once the backend
+// is ready, replace with a fetch() call keyed by eventId.
+const currentEvent = {
+  eventId: "evt1",
+  name: "Community Tech Night",
+  organizer: "Michelle Sainsbury",
+};
+
 // Mock attendee data. Once the backend is ready, replace this array with
 // a fetch() call to the registrations API — the shape (eventId, attendeeId,
 // registrationId, name, email, status) should stay the same.
@@ -106,6 +114,12 @@ function render() {
   const checkedInCount = mockAttendees.filter((a) => a.status === "checked-in").length;
 
   app.innerHTML = `
+    <section class="event-info-card">
+      <h2>${currentEvent.name}</h2>
+      <p><strong>Organizer:</strong> ${currentEvent.organizer}</p>
+      <p><strong>Event ID:</strong> ${currentEvent.eventId}</p>
+    </section>
+
     <section class="summary-card">
       <div>
         <span class="summary-count">${checkedInCount}</span>
@@ -176,6 +190,7 @@ function render() {
           <tr>
             <th>Name</th>
             <th>Email</th>
+            <th>Registration ID</th>
             <th>Status</th>
           </tr>
         </thead>
@@ -186,6 +201,7 @@ function render() {
             <tr>
               <td>${a.name}</td>
               <td>${a.email}</td>
+              <td>${a.registrationId}</td>
               <td><span class="status-badge ${a.status}">${a.status}</span></td>
             </tr>
           `
