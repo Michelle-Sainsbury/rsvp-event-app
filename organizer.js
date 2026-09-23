@@ -6,66 +6,66 @@ const currentEvent = {
   organizer: "Brooklyn Tech Collective",
 };
 
-// Mock attendee data. Once the backend is ready, replace this array with
-// a fetch() call to the registrations API — the shape (eventId, attendeeId,
-// registrationId, name, email, status) should stay the same.
-const mockAttendees = [
-  { eventId: "evt1", attendeeId: "att1", registrationId: "reg1", name: "Jordan Lee", email: "jordan@example.com", status: "registered" },
-  { eventId: "evt1", attendeeId: "att2", registrationId: "reg2", name: "Priya Shah", email: "priya@example.com", status: "registered" },
-  { eventId: "evt1", attendeeId: "att3", registrationId: "reg3", name: "Sam Okafor", email: "sam@example.com", status: "checked-in" },
-  { eventId: "evt1", attendeeId: "att4", registrationId: "reg4", name: "Casey Kim", email: "casey@example.com", status: "registered" },
+const STORAGE_KEY = "rsvpAttendees";
+
+// Real attendees come from index.html's registration flow, which writes
+// { name, email, ticketId, checkedIn } objects to localStorage under
+// STORAGE_KEY. Loaded once on page load; check-ins write back to it.
+function loadRealAttendees() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveRealAttendees() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(realAttendees));
+}
+
+let realAttendees = loadRealAttendees();
+
+// Seed attendees so the dashboard has something to show/search/check in
+// before anyone has actually registered through index.html. Same shape as
+// real attendees so all the same code paths apply.
+const seedAttendees = [
+  { ticketId: "SEED-1001", name: "Jordan Lee", email: "jordan@example.com", checkedIn: false },
+  { ticketId: "SEED-1002", name: "Priya Shah", email: "priya@example.com", checkedIn: false },
+  { ticketId: "SEED-1003", name: "Sam Okafor", email: "sam@example.com", checkedIn: true },
+  { ticketId: "SEED-1004", name: "Casey Kim", email: "casey@example.com", checkedIn: false },
 ];
 
 // Dev-only: names that look like real attendees but whose "Scan" button
 // always fails check-in, so both failure paths can be tested.
-// Alex Rivera: well-formed payload, but no registration matches it.
-// Taylor Morgan: payload isn't even parseable as a QR code.
+// Alex Rivera: well-formed-looking ticket ID, but no registration matches it.
+// Taylor Morgan: blank scan, fails before even reaching a lookup.
 const devFakeAttendees = [
-  { name: "Alex Rivera", payload: "evt9:att9:reg9" },
-  { name: "Taylor Morgan", payload: "not-a-real-qr-code" },
+  { name: "Alex Rivera", payload: "RSVP-0000000000" },
+  { name: "Taylor Morgan", payload: "" },
 ];
+
+function getAllAttendees() {
+  return [...realAttendees, ...seedAttendees];
+}
 
 let nameSearchTerm = "";
 let emailSearchTerm = "";
 let checkInMessage = null; // { type: "success" | "error", text: string }
 
-function parseQrPayload(raw) {
-  const trimmed = raw.trim();
-  if (!trimmed) return null;
-
-  try {
-    const parsed = JSON.parse(trimmed);
-    if (parsed.eventId && parsed.attendeeId && parsed.registrationId) {
-      return parsed;
-    }
-  } catch (e) {
-    // not JSON, fall through to colon-separated format
-  }
-
-  const parts = trimmed.split(":");
-  if (parts.length === 3) {
-    const [eventId, attendeeId, registrationId] = parts;
-    return { eventId, attendeeId, registrationId };
-  }
-
-  return null;
-}
-
 function checkInAttendee(raw) {
-  const payload = parseQrPayload(raw);
+  const ticketId = (raw || "").trim();
 
-  if (!payload) {
+  if (!ticketId) {
     checkInMessage = { type: "error", text: "Invalid QR code format." };
     render();
     return;
   }
 
-  const attendee = mockAttendees.find(
-    (a) =>
-      a.eventId === payload.eventId &&
-      a.attendeeId === payload.attendeeId &&
-      a.registrationId === payload.registrationId
-  );
+  let attendee = realAttendees.find((a) => a.ticketId === ticketId);
+  const isReal = Boolean(attendee);
+  if (!attendee) {
+    attendee = seedAttendees.find((a) => a.ticketId === ticketId);
+  }
 
   if (!attendee) {
     checkInMessage = { type: "error", text: "No matching registration found." };
@@ -73,13 +73,14 @@ function checkInAttendee(raw) {
     return;
   }
 
-  if (attendee.status === "checked-in") {
+  if (attendee.checkedIn) {
     checkInMessage = { type: "error", text: `${attendee.name} has already been checked in.` };
     render();
     return;
   }
 
-  attendee.status = "checked-in";
+  attendee.checkedIn = true;
+  if (isReal) saveRealAttendees();
   checkInMessage = { type: "success", text: `${attendee.name} checked in successfully.` };
   render();
 }
@@ -89,7 +90,7 @@ function checkInAttendee(raw) {
 function getSuggestions(term, field) {
   const t = term.trim().toLowerCase();
   if (!t) return [];
-  return mockAttendees
+  return getAllAttendees()
     .filter((a) => a[field].toLowerCase().includes(t))
     .slice(0, 5);
 }
@@ -111,7 +112,8 @@ function renderSuggestions(term, field) {
 
 function render() {
   const app = document.getElementById("organizerApp");
-  const checkedInCount = mockAttendees.filter((a) => a.status === "checked-in").length;
+  const attendees = getAllAttendees();
+  const checkedInCount = attendees.filter((a) => a.checkedIn).length;
 
   app.innerHTML = `
     <section class="event-info-card">
@@ -123,15 +125,15 @@ function render() {
     <section class="summary-card">
       <div>
         <span class="summary-count">${checkedInCount}</span>
-        <span class="summary-label">/ ${mockAttendees.length} checked in</span>
+        <span class="summary-label">/ ${attendees.length} checked in</span>
       </div>
     </section>
 
     <section class="checkin-card">
       <h2>Check In Attendee</h2>
-      <p class="hint">Paste a scanned QR code payload to verify and check in an attendee.</p>
+      <p class="hint">Paste a scanned ticket ID to verify and check in an attendee.</p>
       <div class="checkin-row">
-        <input id="qrInput" type="text" placeholder="eventId:attendeeId:registrationId" />
+        <input id="qrInput" type="text" placeholder="Ticket ID" />
         <button id="checkInBtn">Check In</button>
       </div>
       ${
@@ -143,13 +145,13 @@ function render() {
       <div class="dev-panel">
         <p class="dev-panel-label">Dev tools: simulate scanning a QR code</p>
         <div class="dev-panel-buttons">
-          ${[...mockAttendees, ...devFakeAttendees]
+          ${[...seedAttendees, ...devFakeAttendees]
             .map(
               (a) => `
             <button
               class="dev-scan-btn"
               type="button"
-              data-payload="${a.payload || `${a.eventId}:${a.attendeeId}:${a.registrationId}`}"
+              data-payload="${a.payload !== undefined ? a.payload : a.ticketId}"
             >
               Scan ${a.name}
             </button>
@@ -190,22 +192,23 @@ function render() {
           <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>Registration ID</th>
+            <th>Ticket ID</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
-          ${mockAttendees
-            .map(
-              (a) => `
+          ${attendees
+            .map((a) => {
+              const status = a.checkedIn ? "checked-in" : "registered";
+              return `
             <tr>
               <td>${a.name}</td>
               <td>${a.email}</td>
-              <td>${a.registrationId}</td>
-              <td><span class="status-badge ${a.status}">${a.status}</span></td>
+              <td>${a.ticketId}</td>
+              <td><span class="status-badge ${status}">${status}</span></td>
             </tr>
-          `
-            )
+          `;
+            })
             .join("")}
         </tbody>
       </table>
