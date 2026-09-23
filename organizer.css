@@ -104,6 +104,22 @@ button:hover {
   background: #4b5563;
 }
 
+.dev-panel-label {
+  margin-top: 12px;
+}
+
+.dev-panel-label:first-child {
+  margin-top: 0;
+}
+
+.dev-scan-btn-bad {
+  background: #c5221f;
+}
+
+.dev-scan-btn-bad:hover {
+  background: #a11712;
+}
+
 .search-row {
   display: flex;
   flex-wrap: wrap;
