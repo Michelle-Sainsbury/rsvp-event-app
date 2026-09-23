@@ -41,6 +41,18 @@ registrationForm.addEventListener("submit", (event) => {
   const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   
-  alert(`Registration complete for ${name}!`);
+  const ticketId = `RSVP-${Date.now()}`;
+
+app.innerHTML = `
+  <section class="ticket">
+    <h2>Registration Complete!</h2>
+    <p><strong>${name}</strong>, you're registered for Community Tech Night.</p>
+    <p>Your digital ticket:</p>
+    <div id="qrcode"></div>
+    <p><strong>Ticket ID:</strong> ${ticketId}</p>
+  </section>
+`;
+
+new QRCode(document.getElementById("qrcode"), ticketId);
 });
 });
