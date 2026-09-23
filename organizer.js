@@ -3,7 +3,7 @@
 const currentEvent = {
   eventId: "evt1",
   name: "Community Tech Night",
-  organizer: "Michelle Sainsbury",
+  organizer: "Brooklyn Tech Collective",
 };
 
 // Mock attendee data. Once the backend is ready, replace this array with
