@@ -60,10 +60,27 @@ app.innerHTML = `
     <p>Your digital ticket:</p>
     <div id="qrcode"></div>
     <p><strong>Ticket ID:</strong> ${ticketId}</p>
+    <button id="cancelBtn">Cancel Registration</button>
   </section>
 `;
 
 new QRCode(document.getElementById("qrcode"), ticketId);
+const cancelBtn = document.getElementById("cancelBtn");
+
+cancelBtn.addEventListener("click", () => {
+  const updatedAttendees = attendees.filter(
+    attendee => attendee.ticketId !== ticketId
+  );
+  
+  localStorage.setItem("rsvpAttendees", JSON.stringify(updatedAttendees));
+  
+  app.innerHTML = `
+    <section class="cancellation">
+      <h2>Registration Cancelled</h2>
+      <p>Your registration for Community Tech Night has been cancelled.</p>
+    </section>
+  `;
+});
 });
 });
 
