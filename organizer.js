@@ -8,11 +8,13 @@ const mockAttendees = [
   { eventId: "evt1", attendeeId: "att4", registrationId: "reg4", name: "Casey Kim", email: "casey@example.com", status: "registered" },
 ];
 
-// Dev-only: names that look like real attendees but whose IDs don't match
-// anyone in mockAttendees, so their "Scan" button always fails check-in.
+// Dev-only: names that look like real attendees but whose "Scan" button
+// always fails check-in, so both failure paths can be tested.
+// Alex Rivera: well-formed payload, but no registration matches it.
+// Taylor Morgan: payload isn't even parseable as a QR code.
 const devFakeAttendees = [
-  { eventId: "evt9", attendeeId: "att9", registrationId: "reg9", name: "Alex Rivera" },
-  { eventId: "evt1", attendeeId: "att1", registrationId: "reg999", name: "Taylor Morgan" },
+  { name: "Alex Rivera", payload: "evt9:att9:reg9" },
+  { name: "Taylor Morgan", payload: "not-a-real-qr-code" },
 ];
 
 let nameSearchTerm = "";
@@ -133,7 +135,7 @@ function render() {
             <button
               class="dev-scan-btn"
               type="button"
-              data-payload="${a.eventId}:${a.attendeeId}:${a.registrationId}"
+              data-payload="${a.payload || `${a.eventId}:${a.attendeeId}:${a.registrationId}`}"
             >
               Scan ${a.name}
             </button>
