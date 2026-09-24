@@ -136,6 +136,8 @@ function render() {
         <input id="qrInput" type="text" placeholder="Ticket ID" />
         <button id="checkInBtn">Check In</button>
       </div>
+      <button id="scanQrBtn" type="button">Scan QR Code</button>
+<div id="qrReader" style="display: none;"></div>
       ${
         checkInMessage
           ? `<p class="checkin-message ${checkInMessage.type}">${checkInMessage.text}</p>`
@@ -249,6 +251,32 @@ function wireUpEvents() {
       checkInAttendee(e.target.value);
     }
   });
+  
+  document.getElementById("scanQrBtn").addEventListener("click", async () => {
+  const reader = document.getElementById("qrReader");
+  reader.style.display = "block";
+
+  const scanner = new Html5Qrcode("qrReader");
+
+  try {
+    await scanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      async (decodedText) => {
+        await scanner.stop();
+        reader.style.display = "none";
+
+        document.getElementById("qrInput").value = decodedText;
+        checkInAttendee(decodedText);
+      },
+      () => {}
+    );
+  } catch (error) {
+    reader.style.display = "none";
+    console.error("Unable to start QR scanner:", error);
+    alert("Unable to access the camera. Please check camera permissions or use the Ticket ID field.");
+  }
+});
 
   document.querySelectorAll(".dev-scan-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
