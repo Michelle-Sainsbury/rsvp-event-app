@@ -60,13 +60,25 @@ app.innerHTML = `
     <p>Your digital ticket:</p>
     <div id="qrcode"></div>
     <p><strong>Ticket ID:</strong> ${ticketId}</p>
+    <button id="calendarBtn">Add to Calendar</button>
     <button id="cancelBtn">Cancel Registration</button>
   </section>
 `;
 
 new QRCode(document.getElementById("qrcode"), ticketId);
 const cancelBtn = document.getElementById("cancelBtn");
+const calendarBtn = document.getElementById("calendarBtn");
 
+calendarBtn.addEventListener("click", () => {
+  const calendarUrl =
+    "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+    "&text=" + encodeURIComponent("Community Tech Night") +
+    "&dates=20261015T220000Z/20261016T000000Z" +
+    "&details=" + encodeURIComponent("Community Tech Night event registration") +
+    "&location=" + encodeURIComponent("Brooklyn, NY");
+  
+  window.open(calendarUrl, "_blank");
+});
 cancelBtn.addEventListener("click", () => {
   const updatedAttendees = attendees.filter(
     attendee => attendee.ticketId !== ticketId
