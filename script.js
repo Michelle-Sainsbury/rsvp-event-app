@@ -2,7 +2,7 @@ const app = document.getElementById("app");
 
 app.innerHTML = `
   <section class="event-card">
-    <h2>Community Tech Night</h2>
+    <h2 class="event-title">Community Tech Night</h2>
 
     <p><strong>Date:</strong> October 15, 2026</p>
     <p><strong>Time:</strong> 6:00 PM</p>
