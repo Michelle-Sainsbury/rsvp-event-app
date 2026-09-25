@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSVP | Community Tech Night</title>
+<!-- organizer.css loads first so theme.css/workspace.css win generic-selector
+     ties for our own mock markup; the embedded #organizerApp widget below
+     still gets styled correctly since its classes (.status-badge, etc.)
+     only exist in organizer.css. -->
+<link rel="stylesheet" href="organizer.css">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="workspace.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <a href="landing.html" class="wordmark">RSVP</a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html">&larr; Events</a>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-label">Community Tech Night</div>
+      <a href="#" data-tab="overview" class="active">Overview</a>
+      <a href="#" data-tab="attendees">Attendees</a>
+      <a href="#" data-tab="checkin">Check-in</a>
+      <a href="#" data-tab="settings">Settings</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="event-header-art placeholder-art"></div>
+    <div class="event-header-meta">
+      <div>
+        <h1>Community Tech Night</h1>
+        <div class="event-header-sub">Thursday, October 15, 2026 &middot; 10:00 AM &ndash; 6:00 PM</div>
+        <div class="event-header-sub">Brooklyn, NY</div>
+      </div>
+      <div class="event-header-actions">
+        <button type="button" class="btn-ghost" title="Copy link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          Copy link
+        </button>
+        <a href="public-event.html" class="btn btn-secondary btn-sm">View event page</a>
+        <a href="create-event.html" class="btn btn-primary btn-sm">Edit event</a>
+      </div>
+    </div>
+
+    <section id="tab-overview" class="tab-content active">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-value">54</div>
+          <div class="stat-label">Registered</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--color-accent);">36</div>
+          <div class="stat-label">Checked in</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#9AA97D;">18</div>
+          <div class="stat-label">Not checked in</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">80</div>
+          <div class="stat-label">Capacity</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">26</div>
+          <div class="stat-label">Tickets remaining</div>
+        </div>
+      </div>
+
+      <div class="two-col" style="grid-template-columns:1.4fr 1fr;margin-top:20px;">
+        <div class="card">
+          <h3>Check-ins by hour</h3>
+          <div class="hourly-chart-row">
+            <div class="hourly-yaxis">
+              <span>12</span>
+              <span>9</span>
+              <span>6</span>
+              <span>3</span>
+              <span>0</span>
+            </div>
+            <div class="hourly-chart-col">
+              <div class="hourly-chart">
+                <div class="hourly-gridline" style="bottom:25%;"></div>
+                <div class="hourly-gridline" style="bottom:50%;"></div>
+                <div class="hourly-gridline" style="bottom:75%;"></div>
+                <div class="hourly-bar" style="height:0%" title="12 AM &middot; 0 check-ins"></div>
+                <div class="hourly-bar" style="height:0%" title="1 AM &middot; 0 check-ins"></div>
+                <div class="hourly-bar" style="height:0%" title="2 AM &middot; 0 check-ins"></div>
+                <div class="hourly-bar" style="height:0%" title="3 AM &middot; 0 check-ins"></div>
+                <div class="hourly-bar" style="height:0%" title="4 AM &middot; 0 check-ins"></div>
+                <div class="hourly-bar" style="height:0%" title="5 AM &middot; 0 check-ins"></div>
+                <div class="hourly-bar" style="height:0%" title="6 AM &middot; 0 check-ins"></div>
+                <div class="hourly-bar" style="height:0%" title="7 AM &middot; 0 check-ins"></div>
+                <div class="hourly-bar" style="height:0%" title="8 AM &middot; 0 check-ins"></div>
+                <div class="hourly-bar" style="height:0%" title="9 AM &middot; 0 check-ins"></div>
+                <div class="hourly-bar active" style="height:75%" title="10 AM &middot; 9 check-ins"></div>
+                <div class="hourly-bar peak" style="height:92%" title="11 AM &middot; 11 check-ins"></div>
+                <div class="hourly-bar active" style="height:50%" title="12 PM &middot; 6 check-ins"></div>
+                <div class="hourly-bar active" style="height:33%" title="1 PM &middot; 4 check-ins"></div>
+                <div class="hourly-bar active" style="height:25%" title="2 PM &middot; 3 check-ins"></div>
+                <div class="hourly-bar active" style="height:17%" title="3 PM &middot; 2 check-ins"></div>
+                <div class="hourly-bar active" style="height:8%" title="4 PM &middot; 1 check-in"></div>
+                <div class="hourly-bar" style="height:0%" title="5 PM &middot; 0 check-ins"></div>
+                <div class="hourly-bar" style="height:0%" title="6 PM &middot; 0 check-ins"></div>
+                <div class="hourly-bar" style="height:0%" title="7 PM &middot; 0 check-ins"></div>
+                <div class="hourly-bar" style="height:0%" title="8 PM &middot; 0 check-ins"></div>
+                <div class="hourly-bar" style="height:0%" title="9 PM &middot; 0 check-ins"></div>
+                <div class="hourly-bar" style="height:0%" title="10 PM &middot; 0 check-ins"></div>
+                <div class="hourly-bar" style="height:0%" title="11 PM &middot; 0 check-ins"></div>
+              </div>
+              <div class="hourly-chart-labels">
+                <span>12 AM</span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span>4 AM</span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span>8 AM</span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span>12 PM</span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span>4 PM</span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span>8 PM</span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          </div>
+          <p class="muted" style="font-size:12px;text-align:right;margin:10px 0 0;">Peak: <strong style="color:var(--color-ink);">11 AM</strong> &middot; 11 check-ins</p>
+        </div>
+        <div class="card">
+          <h3>Check-in rate</h3>
+          <div class="ring-wrap">
+            <div class="ring">
+              <div class="ring-inner">
+                <span class="pct">67%</span>
+                <span class="lbl">of 54</span>
+              </div>
+            </div>
+            <div class="legend">
+              <div class="legend-item"><span class="legend-dot" style="background:var(--color-accent)"></span>Checked in (36)</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#9AA97D"></span>Not checked in (18)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-attendees" class="tab-content">
+      <h2 id="attendeesHeading" style="font-size:20px;">Registered Attendees</h2>
+      <div class="attendees-toolbar">
+        <input id="attendeesSearchName" class="search-input" type="search" placeholder="Search by name...">
+        <input id="attendeesSearchEmail" class="search-input" type="search" placeholder="Search by email...">
+        <input id="attendeesSearchTicket" class="search-input" type="search" placeholder="Search by ticket ID...">
+        <a href="public-event.html#live-registration" class="btn btn-primary btn-sm">+ Add attendee</a>
+      </div>
+      <div class="pill-row" style="margin-bottom:16px;">
+        <button class="pill active" data-filter="all">All <span data-count="all">0</span></button>
+        <button class="pill" data-filter="checked-in">Checked in <span data-count="checked-in">0</span></button>
+        <button class="pill" data-filter="not-checked-in">Not checked in <span data-count="not-checked-in">0</span></button>
+      </div>
+      <div class="card" style="padding:0;overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Ticket ID</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Check-in time</th>
+            </tr>
+          </thead>
+          <tbody id="attendeesTableBody">
+            <tr><td colspan="6" class="muted">Loading attendees&hellip;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted" style="font-size:12px;margin-top:10px;">
+        Real registrations, read live from the same attendee records index.html/organizer.html use.
+        &ldquo;Type&rdquo; and exact check-in time aren&rsquo;t tracked in that data yet, so those columns
+        show what's actually known today.
+      </p>
+    </section>
+
+    <section id="tab-checkin" class="tab-content">
+      <div class="checkin-wrap">
+        <div class="stat-grid checkin-stat-grid">
+          <div class="stat-card">
+            <div class="stat-value">-</div>
+            <div class="stat-label">Tickets left</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" style="color:var(--color-accent);">6 <span style="font-size:16px;">check-ins</span></div>
+            <div class="stat-label">Last 10 minutes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">2 <span style="font-size:16px;">min ago</span></div>
+            <div class="stat-label">Last check in</div>
+          </div>
+        </div>
+        <div id="organizerApp"></div>
+      </div>
+    </section>
+
+    <section id="tab-settings" class="tab-content">
+      <div class="card" style="max-width:640px;">
+        <div class="field">
+          <label for="settingsName">Event name</label>
+          <input id="settingsName" type="text" value="Community Tech Night">
+        </div>
+        <div class="field">
+          <label for="settingsDesc">Description</label>
+          <textarea id="settingsDesc">Join us for an evening of lightning talks, demos, and networking with Brooklyn's tech community.</textarea>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="settingsDate">Date</label>
+            <input id="settingsDate" type="date" value="2026-10-15">
+          </div>
+          <div class="field">
+            <label for="settingsTime">Start time</label>
+            <input id="settingsTime" type="time" value="10:00">
+          </div>
+        </div>
+        <div class="field">
+          <label for="settingsLoc">Location</label>
+          <input id="settingsLoc" type="text" value="Brooklyn, NY">
+        </div>
+        <div class="field">
+          <label for="settingsCap">Capacity</label>
+          <input id="settingsCap" type="number" value="80">
+        </div>
+        <div class="field">
+          <label>Cover image</label>
+          <button type="button" class="btn btn-secondary btn-sm">Upload image</button>
+        </div>
+        <div class="field" style="display:flex;align-items:center;justify-content:space-between;">
+          <label style="margin:0;">Registration open</label>
+          <span class="toggle"><input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span></span>
+        </div>
+
+        <div class="danger-zone">
+          <h3>Close registration</h3>
+          <p class="muted" style="font-size:13px;margin-bottom:14px;">This stops new guests from registering. You'll be asked to confirm before it takes effect.</p>
+          <button type="button" class="btn btn-secondary btn-sm">Close registration</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="workspace.js"></script>
+<script src="attendees-live.js"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="organizer.js"></script>
+</body>
+</html>

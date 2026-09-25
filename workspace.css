@@ -1,0 +1,571 @@
+.event-header-art {
+  height: 180px;
+  border-radius: var(--radius-card);
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.event-header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.event-header-meta h1 {
+  font-size: 30px;
+  margin-bottom: 6px;
+}
+
+.event-header-sub {
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+.event-header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: none;
+  color: var(--color-muted);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 4px;
+  margin-right: auto;
+}
+
+.btn-ghost:hover {
+  color: var(--color-ink);
+  text-decoration: underline;
+}
+
+.hourly-chart-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.hourly-yaxis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 140px;
+  font-size: 10px;
+  color: var(--color-muted);
+  text-align: right;
+}
+
+.hourly-chart-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.hourly-chart {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 140px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.hourly-gridline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #EFEAE1;
+}
+
+.hourly-bar {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 2px;
+  background: var(--color-border);
+  border-radius: 3px 3px 0 0;
+}
+
+.hourly-bar.active {
+  background: var(--color-accent);
+}
+
+.hourly-bar.peak {
+  background: var(--color-accent);
+}
+
+.hourly-chart-labels {
+  display: flex;
+  gap: 3px;
+  font-size: 10px;
+  color: var(--color-muted);
+  margin-top: 8px;
+  text-align: center;
+}
+
+.hourly-chart-labels span {
+  flex: 1;
+  min-width: 0;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.chart-placeholder {
+  width: 100%;
+  height: 200px;
+}
+
+.chart-axis-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--color-muted);
+  margin-top: 8px;
+}
+
+.ring-wrap {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+.ring {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: conic-gradient(var(--color-accent) 0% 67%, #9AA97D 67% 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ring-inner {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring-inner .pct {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.ring-inner .lbl {
+  font-size: 11px;
+  color: var(--color-muted);
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.attendees-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.attendees-toolbar .search-input {
+  flex: 1;
+  min-width: 220px;
+}
+
+.checkin-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.checkin-wrap .event-info-card,
+.checkin-wrap .attendee-list-card {
+  display: none;
+}
+
+/* Merge our own KPI cards and organizer.js's real summary-card into one
+   grid row — display:contents lets each wrapper's children become direct
+   grid items of .checkin-wrap, without moving any real DOM nodes. */
+.checkin-wrap {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.checkin-stat-grid,
+#organizerApp {
+  display: contents;
+}
+
+.checkin-wrap .summary-card { order: 10; }
+.checkin-wrap .checkin-stat-grid .stat-card:nth-child(1) { order: 20; }
+.checkin-wrap .checkin-stat-grid .stat-card:nth-child(2) { order: 30; }
+.checkin-wrap .checkin-stat-grid .stat-card:nth-child(3) { order: 40; }
+.checkin-wrap .checkin-card { order: 50; grid-column: 1 / -1; }
+
+/* Restyle the real organizer.js widget to match the rest of the app's
+   branding (organizer.css alone leaves it with plain borders and Google-blue
+   buttons). Purely visual — organizer.css/organizer.js stay untouched. */
+.checkin-wrap .summary-card,
+.checkin-wrap .checkin-stat-grid .stat-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 130px;
+}
+
+.checkin-wrap .summary-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 20px;
+}
+
+.checkin-wrap .summary-count,
+.checkin-wrap .checkin-stat-grid .stat-value {
+  display: block;
+  min-height: 40px;
+  line-height: 40px;
+  margin-bottom: 8px;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.checkin-wrap .summary-count {
+  color: var(--color-accent);
+}
+
+.checkin-wrap .summary-label,
+.checkin-wrap .checkin-stat-grid .stat-label {
+  display: block;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 17px;
+}
+
+.checkin-wrap .checkin-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-accent);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 32px;
+  margin-top: 4px;
+}
+
+.checkin-wrap .checkin-card h2 {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.checkin-wrap .hint {
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+.checkin-wrap input[type="text"] {
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.checkin-wrap input[type="text"]:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.checkin-wrap .checkin-row {
+  gap: 10px;
+}
+
+.checkin-wrap button {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: var(--radius-pill);
+  padding: 12px 26px;
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  cursor: pointer;
+  transition: opacity 0.12s ease;
+}
+
+.checkin-wrap button:hover {
+  opacity: 0.88;
+}
+
+/* #scanQrBtn: secondary outline so it doesn't compete with the primary
+   Check In action right above it. */
+.checkin-wrap #scanQrBtn {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  border: 1px solid var(--color-border);
+}
+
+.checkin-wrap #scanQrBtn:hover {
+  border-color: var(--color-ink);
+  opacity: 1;
+}
+
+/* #qrReader is created and filled with the live camera feed by organizer.js
+   (html5-qrcode) — we only style the container and add a CSS-only caption,
+   nothing that depends on its internal markup. Animation replays every time
+   it toggles from display:none to block, since that's a fresh render. */
+.checkin-wrap #qrReader {
+  position: relative;
+  max-width: 320px;
+  aspect-ratio: 1 / 1;
+  margin: 20px auto 46px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--color-ink);
+  box-shadow: var(--shadow-card);
+  animation: qrPopIn 0.35s ease;
+}
+
+.checkin-wrap #qrReader video,
+.checkin-wrap #qrReader canvas {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+/* Layered over the live camera feed: the provided QR sample image (its own
+   corner brackets are baked into the PNG — none are drawn here in CSS) plus
+   the event artwork tinted at low opacity. One background so no extra DOM
+   is needed and it survives organizer.js re-rendering #qrReader. */
+.checkin-wrap #qrReader::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 20px;
+  opacity: 0.75;
+  background:
+    url('checkin-qr-sample.png') calc(50% + 7px) calc(50% + 10px) / 130% auto no-repeat,
+    linear-gradient(135deg, rgba(240, 198, 192, 0.18) 0%, rgba(201, 138, 147, 0.18) 45%, rgba(110, 66, 88, 0.18) 100%);
+}
+
+.checkin-wrap #qrReader::after {
+  content: "Align the QR code within the frame";
+  position: absolute;
+  z-index: 2;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 12px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+@keyframes qrPopIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.checkin-wrap .checkin-message {
+  position: relative;
+  text-align: center;
+  padding: 20px 20px 40px;
+}
+
+.checkin-wrap .checkin-message.success::before {
+  content: "\2713";
+  display: block;
+  width: 36px;
+  height: 36px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  background: var(--color-success-text);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 36px;
+}
+
+.checkin-wrap .checkin-message.success::after {
+  content: "View attendee \2192";
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-success-text);
+}
+
+.checkin-wrap .dev-panel {
+  margin-top: 28px;
+  padding-top: 20px;
+  border: none;
+  border-top: 1px dashed var(--color-border);
+  border-radius: 0;
+  background: none;
+}
+
+.checkin-wrap .dev-panel-label {
+  color: var(--color-muted);
+  font-size: 11px;
+}
+
+.checkin-wrap .dev-scan-btn {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+}
+
+.checkin-wrap .dev-scan-btn:hover {
+  border-color: var(--color-ink);
+  color: var(--color-ink);
+  background: var(--color-surface);
+  opacity: 1;
+}
+
+.checkin-wrap .checkin-message {
+  border-radius: 10px;
+}
+
+.checkin-wrap .checkin-message.success {
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+}
+
+.checkin-wrap .checkin-message.error {
+  background: var(--color-error-bg);
+  color: var(--color-error-text);
+}
+
+.checkin-result-card {
+  text-align: center;
+  padding: 32px 24px;
+}
+
+.checkin-check {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.checkin-preview-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.checkin-preview-card {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 12px;
+}
+
+.danger-zone {
+  border: 1px solid var(--color-warning-text);
+  background: var(--color-warning-bg);
+  border-radius: var(--radius-card);
+  padding: 20px 24px;
+  margin-top: 24px;
+}
+
+.danger-zone h3 {
+  font-size: 15px;
+  color: var(--color-warning-text);
+}
+
+.live-tools-divider {
+  margin: 36px 0 20px;
+  padding-top: 24px;
+  border-top: 1px dashed var(--color-border);
+}
+
+.live-tools-divider .live-tag {
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 860px) {
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+  .checkin-preview-row {
+    grid-template-columns: 1fr;
+  }
+}

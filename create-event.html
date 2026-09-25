@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSVP | Create an event</title>
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="public.css">
+<link rel="stylesheet" href="forms.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <a href="landing.html" class="wordmark">RSVP</a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html">Overview</a>
+      <a href="dashboard.html">Events</a>
+      <div class="sidebar-label">Your events</div>
+      <a href="workspace.html?event=summer-makers-festival" class="sidebar-event-link">Summer Makers Festival</a>
+      <a href="workspace.html?event=community-tech-night" class="sidebar-event-link">Community Tech Night</a>
+      <a href="workspace.html?event=product-launch-mixer" class="sidebar-event-link">Product Launch Mixer</a>
+      <div class="sidebar-divider"></div>
+      <a href="create-event.html" class="btn btn-primary btn-sm sidebar-create-btn">+ Create event</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="dashboard-header">
+      <div>
+        <h1 style="font-size:28px;margin:0;">Create an event</h1>
+        <p class="muted" style="margin:4px 0 0;">Fill in the details below. You can edit everything later from the event workspace.</p>
+      </div>
+    </div>
+
+    <div class="create-event-layout">
+      <form class="card create-event-form">
+        <div class="form-section">
+          <h3 class="form-section-title">Event details</h3>
+          <div class="field-row">
+            <div class="field" style="flex:1.4;">
+              <label for="ceName">Event name</label>
+              <input id="ceName" type="text" placeholder="e.g. Community Tech Night">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="ceCapacity">Capacity</label>
+              <input id="ceCapacity" type="number" placeholder="e.g. 80">
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="ceDesc">Description</label>
+            <textarea id="ceDesc" placeholder="What should guests know before they come?" style="min-height:64px;"></textarea>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Date &amp; location</h3>
+          <div class="field-row">
+            <div class="field">
+              <label for="ceDate">Date</label>
+              <input id="ceDate" type="date">
+            </div>
+            <div class="field">
+              <label for="ceStart">Start time</label>
+              <input id="ceStart" type="time">
+            </div>
+            <div class="field">
+              <label for="ceEnd">End time</label>
+              <input id="ceEnd" type="time">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="ceLocation">Location</label>
+              <input id="ceLocation" type="text" placeholder="e.g. Brooklyn, NY">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="ceHost">Organizer / host</label>
+              <input id="ceHost" type="text" placeholder="e.g. Brooklyn Tech Collective">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section" style="border-bottom:none;padding-bottom:0;">
+          <h3 class="form-section-title">Artwork</h3>
+          <div class="field" style="margin-bottom:0;">
+            <div class="upload-box" style="padding:16px;">Drop an image or click to upload</div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" id="openPreviewBtn" class="btn btn-secondary">Preview guest page</button>
+          <button type="button" class="btn btn-primary">Publish event</button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<div id="previewModalOverlay" class="modal-overlay" hidden>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Guest page preview">
+    <button type="button" id="closePreviewBtn" class="modal-close" aria-label="Close preview">&times;</button>
+    <div class="modal-scroll">
+      <div class="guest-hero placeholder-art">
+        <div class="guest-hero-overlay"></div>
+        <div class="guest-hero-title">
+          <h1 id="modalPreviewName">Your event name</h1>
+        </div>
+      </div>
+
+      <div class="guest-page" style="margin-bottom:32px;">
+        <div class="guest-meta-row">
+          <div><span class="label">Date &amp; time</span><span id="modalPreviewDateTime">Pick a date</span></div>
+          <div><span class="label">Location</span><span id="modalPreviewLocation">Add a location</span></div>
+          <div><span class="label">Hosted by</span><span id="modalPreviewHost">Add an organizer name</span></div>
+        </div>
+
+        <p id="modalPreviewDesc">What should guests know before they come?</p>
+
+        <div class="guest-availability">
+          <div>
+            <div class="avail-text" id="modalPreviewAvail">0 of &mdash; spots filled</div>
+          </div>
+          <span class="btn btn-primary" style="pointer-events:none;">Register</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function updateGuestPreviewModal() {
+    const name = document.getElementById("ceName").value.trim();
+    const desc = document.getElementById("ceDesc").value.trim();
+    const date = document.getElementById("ceDate").value;
+    const start = document.getElementById("ceStart").value;
+    const location = document.getElementById("ceLocation").value.trim();
+    const host = document.getElementById("ceHost").value.trim();
+    const capacity = document.getElementById("ceCapacity").value;
+
+    document.getElementById("modalPreviewName").textContent = name || "Your event name";
+    document.getElementById("modalPreviewDesc").textContent = desc || "What should guests know before they come?";
+    document.getElementById("modalPreviewLocation").textContent = location || "Add a location";
+    document.getElementById("modalPreviewHost").textContent = host || "Add an organizer name";
+
+    const dateLabel = date ? new Date(date + "T00:00:00").toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" }) : "Pick a date";
+    document.getElementById("modalPreviewDateTime").textContent = start ? `${dateLabel} · ${start}` : dateLabel;
+    document.getElementById("modalPreviewAvail").textContent = capacity ? `0 of ${capacity} spots filled` : "Set a capacity to see availability";
+  }
+
+  const previewOverlay = document.getElementById("previewModalOverlay");
+  document.getElementById("openPreviewBtn").addEventListener("click", () => {
+    updateGuestPreviewModal();
+    previewOverlay.hidden = false;
+  });
+  document.getElementById("closePreviewBtn").addEventListener("click", () => {
+    previewOverlay.hidden = true;
+  });
+  previewOverlay.addEventListener("click", (e) => {
+    if (e.target === previewOverlay) previewOverlay.hidden = true;
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") previewOverlay.hidden = true;
+  });
+</script>
+
+</body>
+</html>

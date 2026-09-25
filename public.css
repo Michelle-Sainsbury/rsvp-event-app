@@ -1,0 +1,184 @@
+.guest-hero {
+  height: 320px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+}
+
+.guest-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20,18,15,0) 0%, rgba(20,18,15,0.75) 100%);
+}
+
+.guest-hero-title {
+  position: relative;
+  padding: 32px;
+  color: #FAF7F2;
+}
+
+.guest-hero-title h1 {
+  font-size: 40px;
+  color: #FAF7F2;
+  margin-bottom: 6px;
+}
+
+.guest-page {
+  max-width: 640px;
+  margin: 0 auto 80px;
+  padding: 0 24px;
+}
+
+.guest-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.guest-meta-row div span.label {
+  display: block;
+  color: var(--color-muted);
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.guest-availability {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 28px 0;
+}
+
+.guest-availability .avail-text {
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
+.guest-availability .progress-bar {
+  margin-top: 8px;
+  width: 240px;
+}
+
+.live-embed-section {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px dashed var(--color-border);
+}
+
+.ticket-hero {
+  height: 200px;
+  border-radius: var(--radius-card);
+}
+
+.ticket-card {
+  max-width: 420px;
+  margin: -60px auto 60px;
+  position: relative;
+  text-align: center;
+  padding: 32px 24px;
+}
+
+.qr-placeholder {
+  width: 180px;
+  height: 180px;
+  margin: 20px auto;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background:
+    repeating-linear-gradient(45deg, #E6E1D8 0, #E6E1D8 6px, #FFFFFF 6px, #FFFFFF 12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-placeholder span {
+  background: var(--color-surface);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+.ticket-id {
+  font-family: var(--font-display);
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  margin: 8px 0 16px;
+}
+
+/* Light, additive styling for script.js's real #app markup (event-card,
+   registration-form, ticket, cancellation) so the embedded live widget
+   matches the page without touching script.js/style.css. */
+#app .event-card,
+#app .registration-form,
+#app .ticket,
+#app .cancellation {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+}
+
+#app .ticket {
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#app .ticket #qrcode {
+  display: flex;
+  justify-content: center;
+}
+
+#app label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+#app input[type="text"],
+#app input[type="email"] {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  margin: 0 0 16px;
+}
+
+#app button {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: var(--radius-pill);
+  padding: 12px 26px;
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  cursor: pointer;
+}
+
+#app #qrcode {
+  margin: 16px 0;
+}
+
+#app #calendarBtn,
+#app #cancelBtn {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+}
+
+#app #cancelBtn {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-bg);
+}

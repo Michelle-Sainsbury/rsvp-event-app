@@ -124,8 +124,8 @@ function render() {
 
     <section class="summary-card">
       <div>
-        <span class="summary-count">${checkedInCount}</span>
-        <span class="summary-label">/ ${attendees.length} checked in</span>
+        <span class="summary-count">${checkedInCount}/${attendees.length}</span>
+        <span class="summary-label">Checked in today</span>
       </div>
     </section>
 
@@ -261,7 +261,7 @@ function wireUpEvents() {
   try {
     await scanner.start(
       { facingMode: "environment" },
-      { fps: 10, qrbox: { width: 250, height: 250 } },
+      { fps: 10 },
       async (decodedText) => {
         await scanner.stop();
         reader.style.display = "none";

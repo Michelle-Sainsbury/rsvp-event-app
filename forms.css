@@ -1,0 +1,93 @@
+.create-event-form {
+  padding: 8px 32px 32px;
+  max-width: 980px;
+}
+
+.create-event-form .field-row {
+  flex-wrap: wrap;
+}
+
+.create-event-form .field-row .field {
+  flex: 1;
+  min-width: 160px;
+}
+
+.form-section {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.form-section:first-child {
+  padding-top: 24px;
+}
+
+.form-section-title {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  margin-bottom: 18px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 18, 15, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 100;
+}
+
+.modal-overlay[hidden] {
+  display: none;
+}
+
+.modal-panel {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  max-height: 90vh;
+  background: var(--color-bg);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-scroll {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(20, 18, 15, 0.55);
+  color: #FAF7F2;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  background: rgba(20, 18, 15, 0.8);
+}
