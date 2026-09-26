@@ -88,6 +88,13 @@ function checkInAttendee(raw) {
   saveRealAttendees();
   checkInMessage = { type: "success", text: `${attendee.name} checked in successfully.` };
   render();
+
+  // Keep workspace.js's Overview stats and Check-in arrival-summary cards
+  // in sync — they have their own copies of these counts and otherwise
+  // only refresh when the organizer switches tabs.
+  if (typeof renderOverview === "function") renderOverview();
+  if (typeof renderArrivalSummary === "function") renderArrivalSummary();
+  if (typeof renderAttendeesTab === "function") renderAttendeesTab();
 }
 
 // The attendee table always shows everyone. Search boxes only drive the
