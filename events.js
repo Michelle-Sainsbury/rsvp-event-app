@@ -25,6 +25,7 @@ const DEFAULT_EVENTS = [
     capacity: 520,
     registrationOpen: true,
     artClass: "placeholder-art-alt",
+    coverImage: "assets/covers/summer-makers-festival.png",
   },
   {
     id: "community-tech-night",
@@ -38,6 +39,7 @@ const DEFAULT_EVENTS = [
     capacity: 80,
     registrationOpen: true,
     artClass: "placeholder-art",
+    coverImage: "assets/covers/community-tech-night.png",
   },
   {
     id: "wedding-celebration",
@@ -52,6 +54,7 @@ const DEFAULT_EVENTS = [
     registrationOpen: true,
     draft: false,
     artClass: "placeholder-art-cool",
+    coverImage: "assets/covers/wedding-celebration.png",
   },
 ];
 
