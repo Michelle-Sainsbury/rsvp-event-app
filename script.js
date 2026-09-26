@@ -27,6 +27,8 @@ const eventDetails = realEvent
       description: realEvent.description || "Join us for an evening of technology, community, and networking.",
       startUTC: toICSStamp(realEvent.date, realEvent.startTime),
       endUTC: toICSStamp(realEvent.date, realEvent.endTime),
+      coverImage: realEvent.coverImage || null,
+      artClass: realEvent.artClass || "placeholder-art",
     }
   : {
       title: "Community Tech Night",
@@ -38,6 +40,8 @@ const eventDetails = realEvent
       description: "Join us for an evening of technology, community, and networking.",
       startUTC: "20261015T220000Z",
       endUTC: "20261016T000000Z",
+      coverImage: null,
+      artClass: "placeholder-art",
     };
 
 let attendees = JSON.parse(localStorage.getItem("rsvpAttendees")) || [];
@@ -72,16 +76,21 @@ appInfo.innerHTML = `
 renderAvailability();
 
 function renderTicket(name, email, ticketId) {
+  const ticketArtClass = eventDetails.coverImage ? "" : eventDetails.artClass;
+  const ticketArtStyle = eventDetails.coverImage ? ` style="background-image:url('${eventDetails.coverImage}')"` : "";
+
   appForm.innerHTML = `
-    <section class="ticket">
-      <h2>Registration Complete!</h2>
-      <p><strong>${name}</strong>, you're registered for ${eventDetails.title}.</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p>Your digital ticket:</p>
-      <div id="qrcode"></div>
-      <p><strong>Ticket ID:</strong> ${ticketId}</p>
-      <button id="calendarBtn">Add to Calendar</button>
-      <button id="cancelBtn">Cancel Registration</button>
+    <section class="ticket ${ticketArtClass}"${ticketArtStyle}>
+      <div class="ticket-overlay">
+        <h2>Registration Complete!</h2>
+        <p><strong>${name}</strong>, you're registered for ${eventDetails.title}.</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p>Your digital ticket:</p>
+        <div class="ticket-qr-card"><div id="qrcode"></div></div>
+        <p><strong>Ticket ID:</strong> ${ticketId}</p>
+        <button id="calendarBtn">Add to Calendar</button>
+        <button id="cancelBtn">Cancel Registration</button>
+      </div>
     </section>
   `;
 

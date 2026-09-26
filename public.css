@@ -171,7 +171,6 @@ body {
   }
 }
 
-#app .ticket,
 #app .cancellation {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -179,6 +178,38 @@ body {
   box-shadow: var(--shadow-card);
   padding: 28px;
   text-align: center;
+}
+
+#app .ticket {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+}
+
+#app .ticket-overlay {
+  position: relative;
+  z-index: 1;
+  padding: 28px;
+  background: linear-gradient(180deg, rgba(20, 18, 15, 0.35) 0%, rgba(20, 18, 15, 0.82) 55%, rgba(20, 18, 15, 0.9) 100%);
+}
+
+#app .ticket-overlay h2,
+#app .ticket-overlay p,
+#app .ticket-overlay p strong {
+  color: #FAF7F2;
+}
+
+#app .ticket-qr-card {
+  display: inline-block;
+  background: #fff;
+  padding: 14px;
+  border-radius: 12px;
+  margin: 4px 0 8px;
 }
 
 #app .ticket #qrcode {
