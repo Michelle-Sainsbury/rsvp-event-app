@@ -7,7 +7,7 @@
   --color-ink: #1C1B1F;
   --color-muted: #6B6558;
   --color-border: #E6E1D8;
-  --color-accent: #C4607A;
+  --color-accent: #2F7D4F;
   --color-accent-ink: #FAF7F2;
 
   --color-success-text: #1E7E34;
@@ -16,6 +16,11 @@
   --color-warning-bg: #FEF7E0;
   --color-error-text: #C5221F;
   --color-error-bg: #FCE8E6;
+  --color-purple-text: #6B4FBB;
+  --color-purple-bg: #EDE8FA;
+  --color-blue-text: #2D6CB0;
+  --color-blue-bg: #E3EEFB;
+  --color-neutral-fill: #D9D2C2;
 
   --color-dark-surface: #14120F;
 
@@ -503,6 +508,48 @@ p {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
   padding: 20px;
+}
+
+.stat-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.stat-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-badge svg {
+  width: 15px;
+  height: 15px;
+}
+
+.stat-badge-green {
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+}
+
+.stat-badge-orange {
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
+
+.stat-badge-purple {
+  background: var(--color-purple-bg);
+  color: var(--color-purple-text);
+}
+
+.stat-badge-blue {
+  background: var(--color-blue-bg);
+  color: var(--color-blue-text);
 }
 
 .stat-card .stat-value {

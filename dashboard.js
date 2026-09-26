@@ -25,12 +25,12 @@ eventGrid.innerHTML = events
     const registered = attendees.length;
     const checkedIn = attendees.filter((a) => a.checkedIn).length;
     const badge = eventStatusBadge(e);
-    const artStyle = e.coverImage
-      ? ` style="background-image:url('${e.coverImage}');background-size:cover;background-position:center;"`
+    const artFill = e.coverImage
+      ? `<div class="event-card-art-fill" style="background-image:url('${e.coverImage}');"></div>`
       : "";
     return `
-      <a class="event-card" href="workspace.html?event=${encodeURIComponent(e.id)}">
-        <div class="event-card-art ${e.artClass}"${artStyle}></div>
+      <div class="event-card">
+        <div class="event-card-art ${e.coverImage ? "" : e.artClass}">${artFill}</div>
         <div class="event-card-body">
           <div class="event-card-top">
             <h3>${e.name}</h3>
@@ -41,9 +41,13 @@ eventGrid.innerHTML = events
             <div class="event-mini-stat"><span class="n">${e.capacity}</span><span class="l">Capacity</span></div>
             <div class="event-mini-stat"><span class="n">${registered}</span><span class="l">Registered</span></div>
             <div class="event-mini-stat"><span class="n">${checkedIn}</span><span class="l">Checked in</span></div>
+            <div class="event-card-actions">
+              <a href="public-event.html?event=${encodeURIComponent(e.id)}" class="btn btn-sm btn-ink">View Attendee Events Page</a>
+              <a href="workspace.html?event=${encodeURIComponent(e.id)}" class="btn btn-sm event-card-action-purple">View Organizer Dashboard</a>
+            </div>
           </div>
         </div>
-      </a>
+      </div>
     `;
   })
   .join("");

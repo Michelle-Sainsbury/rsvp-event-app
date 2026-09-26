@@ -91,8 +91,15 @@
 }
 
 .event-header-actions .btn-secondary {
-  background: transparent;
-  border-color: var(--color-ink);
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(255, 255, 255, 0.9);
+  color: var(--color-ink);
+  backdrop-filter: blur(3px);
+}
+
+.event-header-actions .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: #fff;
 }
 
 .event-header + .tab-bar {
@@ -233,7 +240,7 @@
   width: 140px;
   height: 140px;
   border-radius: 50%;
-  background: conic-gradient(var(--color-accent) 0% 67%, #9AA97D 67% 100%);
+  background: conic-gradient(var(--color-accent) 0% 67%, var(--color-neutral-fill) 67% 100%);
   display: flex;
   align-items: center;
   justify-content: center;

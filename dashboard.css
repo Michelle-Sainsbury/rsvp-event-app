@@ -8,6 +8,10 @@
   margin-top: 4px;
 }
 
+.dashboard-main {
+  padding-top: 14px;
+}
+
 .dashboard-header {
   display: flex;
   align-items: center;
@@ -15,10 +19,34 @@
   margin-bottom: 28px;
 }
 
+.dashboard-create-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 34px;
+  border-radius: 10px;
+  color: var(--color-muted);
+  font-weight: 500;
+  font-size: 16px;
+  font-family: var(--font-body);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+}
+
+.dashboard-create-btn:hover {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(196, 96, 122, 0.3);
+}
+
 .event-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .event-card {
@@ -27,45 +55,110 @@
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
   overflow: hidden;
-  display: block;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: stretch;
 }
 
 .event-card-art {
-  height: 140px;
+  position: relative;
+  width: 400px;
+  flex-shrink: 0;
+  background-color: var(--color-bg);
+  overflow: hidden;
+}
+
+.event-card-art-fill {
+  position: absolute;
+  inset: -20px;
+  background-size: cover;
+  background-position: right center;
+}
+
+.event-card-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.65) 100%);
+  pointer-events: none;
 }
 
 .event-card-body {
-  padding: 20px;
+  flex: 1;
+  min-width: 0;
+  padding: 24px 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .event-card-top {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 8px;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.event-card-top .badge {
+  flex-shrink: 0;
 }
 
 .event-card-body h3 {
-  font-size: 19px;
-  margin-bottom: 4px;
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  margin-bottom: 0;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .event-card-meta {
   font-size: 13px;
   color: var(--color-muted);
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .event-mini-stats {
   display: flex;
-  gap: 16px;
-  padding-top: 14px;
+  align-items: center;
+  gap: 32px;
+  padding-top: 16px;
   border-top: 1px solid var(--color-border);
 }
 
 .event-mini-stat {
-  flex: 1;
+  flex: 0 0 auto;
+}
+
+.event-card-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.event-card-action-purple {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  border-color: var(--color-ink);
+}
+
+.event-card-action-purple:hover {
+  background: var(--color-bg);
+}
+
+@media (max-width: 640px) {
+  .event-card {
+    flex-direction: column;
+  }
+  .event-card-art {
+    width: 100%;
+    height: 140px;
+  }
 }
 
 .event-mini-stat .n {

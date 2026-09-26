@@ -100,7 +100,7 @@ function renderOverview() {
   document.getElementById("legendCheckedIn").textContent = `Checked in (${checkedIn})`;
   document.getElementById("legendNotCheckedIn").textContent = `Not checked in (${notCheckedIn})`;
   document.getElementById("checkinRing").style.background =
-    `conic-gradient(var(--color-accent) 0% ${pct}%, #9AA97D ${pct}% 100%)`;
+    `conic-gradient(var(--color-accent) 0% ${pct}%, var(--color-neutral-fill) ${pct}% 100%)`;
 }
 
 // Check-in tab's arrival-summary cards — same real numbers as the Overview
