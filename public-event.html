@@ -11,17 +11,22 @@
 
 <div class="guest-brand-bar">
   <a href="landing.html" class="wordmark">RSVP</a>
+  <span class="guest-brand-sep">|</span>
+  <span class="guest-brand-organizer" id="guestBrandOrganizer">Brooklyn Tech Collective</span>
+</div>
+
+<div class="event-header" id="guestHero">
+  <div class="event-header-art placeholder-art" id="guestHeroArt"></div>
+  <div class="event-header-overlay">
+    <div class="event-header-meta">
+      <h1 id="guestHeroName">Community Tech Night</h1>
+      <div class="event-header-sub" id="guestHeroDateTime">Thursday, October 15, 2026 &middot; 10:00 AM &ndash; 6:00 PM</div>
+      <div class="event-header-sub" id="guestHeroLocation">Brooklyn, NY</div>
+    </div>
+  </div>
 </div>
 
 <div class="guest-main">
-
-  <div class="guest-hero placeholder-art" id="guestHero">
-    <div class="guest-hero-overlay"></div>
-    <div class="guest-hero-title">
-      <div class="guest-hero-eyebrow" id="guestHeroLocation">Brooklyn, NY</div>
-      <h1 id="guestHeroName">Community Tech Night</h1>
-    </div>
-  </div>
 
   <div id="live-registration">
     <main id="app" class="guest-columns">
@@ -42,15 +47,27 @@
     if (!event) return;
 
     document.title = `RSVP | ${event.name}`;
-    document.getElementById("guestHeroName").textContent = event.name;
-    document.getElementById("guestHeroLocation").textContent = event.location;
 
-    const hero = document.getElementById("guestHero");
-    if (event.artClass) hero.classList.add(event.artClass);
+    const nameEl = document.getElementById("guestHeroName");
+    nameEl.innerHTML = "";
+    const nameWords = event.name.split(" ");
+    nameEl.appendChild(document.createTextNode(nameWords[0]));
+    if (nameWords.length > 1) {
+      nameEl.appendChild(document.createElement("br"));
+      nameEl.appendChild(document.createTextNode(nameWords.slice(1).join(" ")));
+    }
+
+    document.getElementById("guestHeroDateTime").textContent =
+      `${formatEventDateLong(event.date)} · ${formatEventTime(event.startTime)} – ${formatEventTime(event.endTime)}`;
+    document.getElementById("guestHeroLocation").textContent = event.location;
+    document.getElementById("guestBrandOrganizer").textContent = event.organizer;
+
+    const art = document.getElementById("guestHeroArt");
+    art.className = `event-header-art ${event.artClass || "placeholder-art"}`;
     if (event.coverImage) {
-      hero.style.backgroundImage = `url("${event.coverImage}")`;
-      hero.style.backgroundSize = "cover";
-      hero.style.backgroundPosition = "center";
+      art.style.backgroundImage = `url("${event.coverImage}")`;
+      art.style.backgroundSize = "cover";
+      art.style.backgroundPosition = "center";
     }
   })();
 </script>

@@ -49,15 +49,10 @@ const pct = capacity ? Math.min(Math.round((registeredCount / capacity) * 100), 
 
 appInfo.innerHTML = `
   <section class="event-card">
-    <div class="card-facts">
-      <div><span class="label">Date &amp; time</span><span class="value">${eventDetails.date} &middot; ${eventDetails.timeRange}</span></div>
-      <div><span class="label">Hosted by</span><span class="value">${eventDetails.organizer}</span></div>
-    </div>
-
-    <div class="card-divider"></div>
-
     <p class="card-desc">${eventDetails.description}</p>
+  </section>
 
+  <section class="event-card availability-card">
     <div class="card-availability">
       <div class="avail-row">
         <span>${registeredCount} of ${capacity} spots filled</span>
@@ -68,19 +63,61 @@ appInfo.innerHTML = `
   </section>
 `;
 
-if (realEvent && realEvent.registrationOpen === false) {
+function renderTicket(name, email, ticketId) {
   appForm.innerHTML = `
-    <section class="registration-form">
-      <h2>Registration is closed</h2>
-      <p>The organizer has closed registration for ${eventDetails.title}. Check back later or reach out to the organizer directly.</p>
+    <section class="ticket">
+      <h2>Registration Complete!</h2>
+      <p><strong>${name}</strong>, you're registered for ${eventDetails.title}.</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p>Your digital ticket:</p>
+      <div id="qrcode"></div>
+      <p><strong>Ticket ID:</strong> ${ticketId}</p>
+      <button id="calendarBtn">Add to Calendar</button>
+      <button id="cancelBtn">Cancel Registration</button>
     </section>
   `;
-} else {
 
+  new QRCode(document.getElementById("qrcode"), ticketId);
+  const cancelBtn = document.getElementById("cancelBtn");
+  const calendarBtn = document.getElementById("calendarBtn");
+
+  calendarBtn.addEventListener("click", () => {
+    const calendarUrl =
+      "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+      "&text=" + encodeURIComponent(eventDetails.title) +
+      "&dates=" + `${eventDetails.startUTC}/${eventDetails.endUTC}` +
+      "&details=" + encodeURIComponent(`${eventDetails.title} event registration`) +
+      "&location=" + encodeURIComponent(eventDetails.location);
+
+    window.open(calendarUrl, "_blank");
+  });
+
+  cancelBtn.addEventListener("click", () => {
+    const updatedAttendees = attendees.filter(
+      attendee => attendee.ticketId !== ticketId
+    );
+
+    localStorage.setItem("rsvpAttendees", JSON.stringify(updatedAttendees));
+
+    appForm.innerHTML = `
+      <section class="cancellation">
+        <h2>Registration Cancelled</h2>
+        <p>Your registration for ${eventDetails.title} has been cancelled.</p>
+        <button id="registerAgainBtn" style="width:100%">Register for Event</button>
+      </section>
+    `;
+
+    document.getElementById("registerAgainBtn").addEventListener("click", () => {
+      renderRegistrationForm(true);
+    });
+  });
+}
+
+function renderRegistrationForm(startExpanded) {
   appForm.innerHTML = `
     <section class="registration-form">
       <form id="registrationForm">
-        <div class="reg-fields" id="regFields">
+        <div class="reg-fields${startExpanded ? " expanded" : ""}" id="regFields">
           <label for="name">Full Name</label>
           <input type="text" id="name" required>
 
@@ -95,7 +132,9 @@ if (realEvent && realEvent.registrationOpen === false) {
   const registrationForm = document.getElementById("registrationForm");
   const regFields = document.getElementById("regFields");
   const registerBtn = document.getElementById("registerBtn");
-  let fieldsRevealed = false;
+  let fieldsRevealed = !!startExpanded;
+
+  if (startExpanded) document.getElementById("name").focus();
 
   registerBtn.addEventListener("click", (event) => {
     if (!fieldsRevealed) {
@@ -106,64 +145,34 @@ if (realEvent && realEvent.registrationOpen === false) {
     }
   });
 
-registrationForm.addEventListener("submit", (event) => {
-  event.preventDefault();
+  registrationForm.addEventListener("submit", (event) => {
+    event.preventDefault();
 
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
 
-  const ticketId = `RSVP-${Date.now()}`;
-const attendee = {
-  name: name,
-  email: email,
-  ticketId: ticketId,
-  checkedIn: false,
-  eventId: currentEventId
-};
+    const ticketId = `RSVP-${Date.now()}`;
+    const attendee = {
+      name: name,
+      email: email,
+      ticketId: ticketId,
+      checkedIn: false,
+      eventId: currentEventId
+    };
 
-const attendees = JSON.parse(localStorage.getItem("rsvpAttendees")) || [];
-attendees.push(attendee);
-localStorage.setItem("rsvpAttendees", JSON.stringify(attendees));
-appForm.innerHTML = `
-  <section class="ticket">
-    <h2>Registration Complete!</h2>
-    <p><strong>${name}</strong>, you're registered for ${eventDetails.title}.</p>
-    <p><strong>Email:</strong> ${email}</p>
-    <p>Your digital ticket:</p>
-    <div id="qrcode"></div>
-    <p><strong>Ticket ID:</strong> ${ticketId}</p>
-    <button id="calendarBtn">Add to Calendar</button>
-    <button id="cancelBtn">Cancel Registration</button>
-  </section>
-`;
+    attendees.push(attendee);
+    localStorage.setItem("rsvpAttendees", JSON.stringify(attendees));
+    renderTicket(name, email, ticketId);
+  });
+}
 
-new QRCode(document.getElementById("qrcode"), ticketId);
-const cancelBtn = document.getElementById("cancelBtn");
-const calendarBtn = document.getElementById("calendarBtn");
-
-calendarBtn.addEventListener("click", () => {
-  const calendarUrl =
-    "https://calendar.google.com/calendar/render?action=TEMPLATE" +
-    "&text=" + encodeURIComponent(eventDetails.title) +
-    "&dates=" + `${eventDetails.startUTC}/${eventDetails.endUTC}` +
-    "&details=" + encodeURIComponent(`${eventDetails.title} event registration`) +
-    "&location=" + encodeURIComponent(eventDetails.location);
-
-  window.open(calendarUrl, "_blank");
-});
-cancelBtn.addEventListener("click", () => {
-  const updatedAttendees = attendees.filter(
-    attendee => attendee.ticketId !== ticketId
-  );
-
-  localStorage.setItem("rsvpAttendees", JSON.stringify(updatedAttendees));
-
+if (realEvent && realEvent.registrationOpen === false) {
   appForm.innerHTML = `
-    <section class="cancellation">
-      <h2>Registration Cancelled</h2>
-      <p>Your registration for ${eventDetails.title} has been cancelled.</p>
+    <section class="registration-form">
+      <h2>Registration is closed</h2>
+      <p>The organizer has closed registration for ${eventDetails.title}. Check back later or reach out to the organizer directly.</p>
     </section>
   `;
-});
-});
+} else {
+  renderRegistrationForm(false);
 }

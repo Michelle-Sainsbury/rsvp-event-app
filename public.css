@@ -5,8 +5,19 @@ body {
 .guest-brand-bar {
   display: flex;
   align-items: center;
+  gap: 12px;
   padding: 20px 40px;
-  border-bottom: 1px solid var(--color-border);
+}
+
+.guest-brand-sep {
+  color: var(--color-border);
+  font-size: 20px;
+}
+
+.guest-brand-organizer {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-ink);
 }
 
 .guest-brand-bar .wordmark {
@@ -14,46 +25,57 @@ body {
 }
 
 .guest-main {
-  max-width: 1120px;
+  width: calc(100% - 48px);
   margin: 0 auto;
-  padding: 0 24px 80px;
+  padding: 0 0 80px;
 }
 
-.guest-hero {
-  height: 320px;
+.event-header {
   position: relative;
-  display: flex;
-  align-items: flex-end;
-  border-radius: var(--radius-card);
+  aspect-ratio: 782 / 195;
+  min-height: 195px;
   overflow: hidden;
-  margin-top: 24px;
+  width: calc(100% - 48px);
+  margin: 8px auto 0;
+  border-radius: var(--radius-card);
 }
 
-.guest-hero-overlay {
+.event-header-art {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(20,18,15,0) 0%, rgba(20,18,15,0.75) 100%);
 }
 
-.guest-hero-title {
-  position: relative;
-  padding: 32px;
-  color: #FAF7F2;
+.event-header-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 12px 40px 80px 60px;
 }
 
-.guest-hero-eyebrow {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(250, 247, 242, 0.85);
-  margin-bottom: 6px;
+.event-header-meta {
+  margin-top: 10px;
 }
 
-.guest-hero-title h1 {
-  font-size: 40px;
-  color: #FAF7F2;
-  margin-bottom: 6px;
+.event-header-meta h1 {
+  font-family: var(--font-display);
+  font-size: 72px;
+  font-weight: 500;
+  font-style: normal;
+  line-height: 0.96;
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+  color: #101010;
+  max-width: 640px;
+  text-align: left;
+}
+
+.event-header-sub {
+  color: var(--color-ink);
+  font-size: 19px;
+  margin-bottom: 3px;
 }
 
 #live-registration {
@@ -108,7 +130,7 @@ body {
 
 #app.guest-columns {
   display: grid;
-  grid-template-columns: 1.6fr 1fr;
+  grid-template-columns: 1.3fr 1fr;
   align-items: start;
   gap: 32px;
   margin-top: 32px;
@@ -121,6 +143,10 @@ body {
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
   padding: 28px;
+}
+
+#app .event-card + .event-card {
+  margin-top: 20px;
 }
 
 #appForm .registration-form,
@@ -197,7 +223,7 @@ body {
 }
 
 #app .card-availability {
-  margin-top: 20px;
+  margin-top: 0;
 }
 
 #app .card-availability .avail-row {
@@ -265,7 +291,8 @@ body {
   margin-top: 10px;
 }
 
-#app #cancelBtn {
+#app #cancelBtn,
+#app #registerBtn {
   background: var(--color-ink);
   border-color: var(--color-ink);
   color: var(--color-bg);
