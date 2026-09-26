@@ -317,7 +317,8 @@ p {
   margin-bottom: 24px;
 }
 
-.tab-bar button {
+.tab-bar button,
+.tab-bar a {
   border: none;
   background: transparent;
   font-family: var(--font-body);
@@ -328,9 +329,11 @@ p {
   cursor: pointer;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
+  text-decoration: none;
 }
 
-.tab-bar button.active {
+.tab-bar button.active,
+.tab-bar a.active {
   color: var(--color-ink);
   border-bottom-color: var(--color-accent);
   font-weight: 600;
@@ -425,27 +428,46 @@ p {
   display: inline-block;
   width: 42px;
   height: 24px;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .toggle input {
-  display: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
 }
 
 .toggle-track {
   position: absolute;
   inset: 0;
-  background: var(--color-accent);
+  background: var(--color-border);
   border-radius: var(--radius-pill);
+  transition: background 0.15s ease;
+  pointer-events: none;
+}
+
+.toggle input:checked ~ .toggle-track {
+  background: var(--color-accent);
 }
 
 .toggle-thumb {
   position: absolute;
   top: 3px;
-  right: 3px;
+  left: 3px;
   width: 18px;
   height: 18px;
   background: #fff;
   border-radius: 50%;
+  transition: left 0.15s ease;
+  pointer-events: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.toggle input:checked ~ .toggle-thumb {
+  left: 21px;
 }
 
 /* Gradient placeholders */

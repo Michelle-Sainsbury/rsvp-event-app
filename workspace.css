@@ -1,34 +1,78 @@
-.event-header-art {
-  height: 180px;
-  border-radius: var(--radius-card);
-  margin-bottom: 20px;
+.event-header {
   position: relative;
+  min-height: 245px;
+  border-radius: 0;
+  overflow: hidden;
+  margin: -32px -40px 0;
+  width: calc(100% + 80px);
+}
+
+.event-header-art {
+  position: absolute;
+  inset: 0;
+}
+
+.event-header-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 32px 34px;
+}
+
+.event-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .event-header-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 28px;
+  margin-top: auto;
 }
 
 .event-header-meta h1 {
-  font-size: 30px;
-  margin-bottom: 6px;
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 500;
+  line-height: 1.05;
+  margin: 0 0 12px;
+  color: var(--color-ink);
 }
 
 .event-header-sub {
-  color: var(--color-muted);
-  font-size: 14px;
+  color: var(--color-ink);
+  font-size: 15px;
+  margin-bottom: 2px;
 }
 
 .event-header-actions {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
   align-items: center;
+}
+
+.event-header-actions .btn {
+  padding: 12px 26px;
+  font-size: 14px;
+}
+
+.event-header-actions .btn-secondary {
+  background: transparent;
+  border-color: var(--color-ink);
+}
+
+.event-header + .tab-bar {
+  background: var(--color-surface);
+  border-radius: 0;
+  box-shadow: var(--shadow-card);
+  padding: 0 40px;
+  margin: 0 -40px 24px;
+  width: calc(100% + 80px);
 }
 
 .btn-ghost {
@@ -223,76 +267,85 @@
 }
 
 .checkin-wrap {
-  max-width: 760px;
-  margin: 0 auto;
+  max-width: 1180px;
+  margin: 0;
 }
 
 .checkin-wrap .event-info-card,
+.checkin-wrap .summary-card,
 .checkin-wrap .attendee-list-card {
   display: none;
 }
 
-/* Merge our own KPI cards and organizer.js's real summary-card into one
-   grid row — display:contents lets each wrapper's children become direct
-   grid items of .checkin-wrap, without moving any real DOM nodes. */
+/* Arrival summary stacks on top, scanner card (rendered by organizer.js
+   into #organizerApp) underneath. */
 .checkin-wrap {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.checkin-wrap .arrival-summary {
+  order: -1;
+  display: flex;
+  align-items: stretch;
   gap: 16px;
 }
 
-.checkin-stat-grid,
-#organizerApp {
-  display: contents;
-}
-
-.checkin-wrap .summary-card { order: 10; }
-.checkin-wrap .checkin-stat-grid .stat-card:nth-child(1) { order: 20; }
-.checkin-wrap .checkin-stat-grid .stat-card:nth-child(2) { order: 30; }
-.checkin-wrap .checkin-stat-grid .stat-card:nth-child(3) { order: 40; }
-.checkin-wrap .checkin-card { order: 50; grid-column: 1 / -1; }
-
-/* Restyle the real organizer.js widget to match the rest of the app's
-   branding (organizer.css alone leaves it with plain borders and Google-blue
-   buttons). Purely visual — organizer.css/organizer.js stay untouched. */
-.checkin-wrap .summary-card,
-.checkin-wrap .checkin-stat-grid .stat-card {
+.arrival-cards {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  min-height: 130px;
+  flex: 1.2;
+  gap: 10px;
 }
 
-.checkin-wrap .summary-card {
+.arrival-card {
+  flex: 1;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
-  padding: 20px;
+  padding: 14px 8px;
+  text-align: center;
 }
 
-.checkin-wrap .summary-count,
-.checkin-wrap .checkin-stat-grid .stat-value {
-  display: block;
-  min-height: 40px;
-  line-height: 40px;
-  margin-bottom: 8px;
+.arrival-value {
   font-family: var(--font-display);
-  font-size: 32px;
+  font-size: 22px;
   font-weight: 700;
+  color: var(--color-ink);
 }
 
-.checkin-wrap .summary-count {
+.arrival-label {
+  font-size: 11px;
+  font-weight: 600;
   color: var(--color-accent);
+  margin-top: 4px;
 }
 
-.checkin-wrap .summary-label,
-.checkin-wrap .checkin-stat-grid .stat-label {
-  display: block;
-  margin: 0;
+.arrival-progress-card {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 18px 20px;
+}
+
+.arrival-progress-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--color-ink);
+}
+
+.arrival-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
   color: var(--color-muted);
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 17px;
+  margin-bottom: 10px;
 }
 
 .checkin-wrap .checkin-card {
@@ -436,6 +489,7 @@
   position: relative;
   text-align: center;
   padding: 20px 20px 40px;
+  animation: checkinMessageFade 1.6s ease forwards;
 }
 
 .checkin-wrap .checkin-message.success::before {
@@ -452,22 +506,19 @@
   line-height: 36px;
 }
 
-.checkin-wrap .checkin-message.success::after {
-  content: "View attendee \2192";
-  display: block;
-  margin-top: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-success-text);
+@keyframes checkinMessageFade {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 .checkin-wrap .dev-panel {
-  margin-top: 28px;
-  padding-top: 20px;
+  margin: 28px -32px -32px;
+  padding: 20px 32px;
   border: none;
-  border-top: 1px dashed var(--color-border);
-  border-radius: 0;
-  background: none;
+  border-top: 1px solid var(--color-border);
+  border-radius: 0 0 var(--radius-card) var(--radius-card);
+  background: var(--color-bg);
 }
 
 .checkin-wrap .dev-panel-label {
@@ -559,6 +610,77 @@
 .live-tools-divider .live-tag {
   display: inline-block;
   margin-bottom: 12px;
+}
+
+/* Settings tab: each section is static text until its own "Edit" button
+   is clicked (see workspace.js toggleSettingsEdit). */
+.settings-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.settings-section-header .form-section-title {
+  margin-bottom: 0;
+}
+
+.settings-edit-btn {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.settings-edit-btn:hover {
+  border-color: var(--color-ink);
+}
+
+.detail-row {
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+  margin-bottom: 4px;
+}
+
+.detail-value {
+  display: block;
+  font-size: 14px;
+  color: var(--color-ink);
+}
+
+.settings-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.share-link-row {
+  display: flex;
+  gap: 10px;
+}
+
+.share-link-row input {
+  flex: 1;
+  color: var(--color-muted);
+  background: var(--color-bg);
 }
 
 @media (max-width: 860px) {

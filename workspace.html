@@ -10,6 +10,8 @@
      only exist in organizer.css. -->
 <link rel="stylesheet" href="organizer.css">
 <link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="dashboard.css">
+<link rel="stylesheet" href="forms.css">
 <link rel="stylesheet" href="workspace.css">
 </head>
 <body>
@@ -20,33 +22,40 @@
       <a href="landing.html" class="wordmark">RSVP</a>
     </div>
     <nav class="sidebar-nav">
-      <a href="dashboard.html">&larr; Events</a>
+      <a href="dashboard.html">Events</a>
+      <div class="sidebar-label">Your events</div>
+      <a href="workspace.html?event=summer-makers-festival" class="sidebar-event-link">Summer Makers Festival</a>
+      <a href="workspace.html?event=community-tech-night" class="sidebar-event-link active">Community Tech Night</a>
+      <a href="workspace.html?event=product-launch-mixer" class="sidebar-event-link">Product Launch Mixer</a>
       <div class="sidebar-divider"></div>
-      <div class="sidebar-label">Community Tech Night</div>
+      <a href="create-event.html" class="btn btn-primary btn-sm sidebar-create-btn">+ Create event</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="event-header">
+      <div class="event-header-art placeholder-art"></div>
+      <div class="event-header-overlay">
+        <div class="event-header-top">
+          <div class="event-header-actions">
+            <a href="public-event.html" class="btn btn-secondary">View event page</a>
+            <a href="#" class="btn btn-ink" onclick="showTab('settings'); return false;">Edit event</a>
+          </div>
+        </div>
+        <div class="event-header-meta">
+          <h1>Community Tech Night</h1>
+          <div class="event-header-sub">Thursday, October 15, 2026 &middot; 10:00 AM &ndash; 6:00 PM</div>
+          <div class="event-header-sub">Brooklyn, NY</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="tab-bar">
       <a href="#" data-tab="overview" class="active">Overview</a>
       <a href="#" data-tab="attendees">Attendees</a>
       <a href="#" data-tab="checkin">Check-in</a>
       <a href="#" data-tab="settings">Settings</a>
     </nav>
-  </aside>
-
-  <main class="main">
-    <div class="event-header-art placeholder-art"></div>
-    <div class="event-header-meta">
-      <div>
-        <h1>Community Tech Night</h1>
-        <div class="event-header-sub">Thursday, October 15, 2026 &middot; 10:00 AM &ndash; 6:00 PM</div>
-        <div class="event-header-sub">Brooklyn, NY</div>
-      </div>
-      <div class="event-header-actions">
-        <button type="button" class="btn-ghost" title="Copy link">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          Copy link
-        </button>
-        <a href="public-event.html" class="btn btn-secondary btn-sm">View event page</a>
-        <a href="create-event.html" class="btn btn-primary btn-sm">Edit event</a>
-      </div>
-    </div>
 
     <section id="tab-overview" class="tab-content active">
       <div class="stat-grid">
@@ -200,69 +209,201 @@
 
     <section id="tab-checkin" class="tab-content">
       <div class="checkin-wrap">
-        <div class="stat-grid checkin-stat-grid">
-          <div class="stat-card">
-            <div class="stat-value">-</div>
-            <div class="stat-label">Tickets left</div>
+        <div id="organizerApp"></div>
+        <div class="arrival-summary">
+          <div class="arrival-cards">
+            <div class="arrival-card">
+              <div class="arrival-value">80</div>
+              <div class="arrival-label">Capacity</div>
+            </div>
+            <div class="arrival-card">
+              <div class="arrival-value">54</div>
+              <div class="arrival-label">Registered</div>
+            </div>
+            <div class="arrival-card">
+              <div class="arrival-value">36</div>
+              <div class="arrival-label">Checked in</div>
+            </div>
           </div>
-          <div class="stat-card">
-            <div class="stat-value" style="color:var(--color-accent);">6 <span style="font-size:16px;">check-ins</span></div>
-            <div class="stat-label">Last 10 minutes</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">2 <span style="font-size:16px;">min ago</span></div>
-            <div class="stat-label">Last check in</div>
+          <div class="arrival-progress-card">
+            <h3 class="arrival-progress-title">Event turnout</h3>
+            <div class="arrival-progress-labels">
+              <span>36 of 54 arrived</span>
+              <span>67%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-bar-fill" style="width:67%"></div></div>
           </div>
         </div>
-        <div id="organizerApp"></div>
       </div>
     </section>
 
     <section id="tab-settings" class="tab-content">
-      <div class="card" style="max-width:640px;">
-        <div class="field">
-          <label for="settingsName">Event name</label>
-          <input id="settingsName" type="text" value="Community Tech Night">
-        </div>
-        <div class="field">
-          <label for="settingsDesc">Description</label>
-          <textarea id="settingsDesc">Join us for an evening of lightning talks, demos, and networking with Brooklyn's tech community.</textarea>
-        </div>
-        <div class="field-row">
-          <div class="field">
-            <label for="settingsDate">Date</label>
-            <input id="settingsDate" type="date" value="2026-10-15">
+      <div class="card create-event-form" style="max-width:820px;">
+
+        <div class="form-section settings-section" data-section="details">
+          <div class="settings-section-header">
+            <h3 class="form-section-title">Event details</h3>
+            <button type="button" class="settings-edit-btn" data-edit="details">Edit</button>
           </div>
-          <div class="field">
-            <label for="settingsTime">Start time</label>
-            <input id="settingsTime" type="time" value="10:00">
+
+          <div class="settings-view" data-view="details">
+            <div class="detail-row"><span class="detail-label">Event name</span><span class="detail-value" data-field="settingsName">Community Tech Night</span></div>
+            <div class="detail-row"><span class="detail-label">Capacity</span><span class="detail-value" data-field="settingsCap">80</span></div>
+            <div class="detail-row"><span class="detail-label">Description</span><span class="detail-value" data-field="settingsDesc">Join us for an evening of lightning talks, demos, and networking with Brooklyn's tech community.</span></div>
           </div>
-        </div>
-        <div class="field">
-          <label for="settingsLoc">Location</label>
-          <input id="settingsLoc" type="text" value="Brooklyn, NY">
-        </div>
-        <div class="field">
-          <label for="settingsCap">Capacity</label>
-          <input id="settingsCap" type="number" value="80">
-        </div>
-        <div class="field">
-          <label>Cover image</label>
-          <button type="button" class="btn btn-secondary btn-sm">Upload image</button>
-        </div>
-        <div class="field" style="display:flex;align-items:center;justify-content:space-between;">
-          <label style="margin:0;">Registration open</label>
-          <span class="toggle"><input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span></span>
+
+          <div class="settings-edit" data-edit-panel="details" hidden>
+            <div class="field-row">
+              <div class="field" style="flex:1.4;">
+                <label for="settingsName">Event name</label>
+                <input id="settingsName" type="text" value="Community Tech Night">
+              </div>
+              <div class="field" style="margin-bottom:0;">
+                <label for="settingsCap">Capacity</label>
+                <input id="settingsCap" type="number" value="80">
+              </div>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="settingsDesc">Description</label>
+              <textarea id="settingsDesc" style="min-height:64px;">Join us for an evening of lightning talks, demos, and networking with Brooklyn's tech community.</textarea>
+            </div>
+            <div class="settings-edit-actions">
+              <button type="button" class="btn btn-secondary btn-sm" data-cancel="details">Cancel</button>
+              <button type="button" class="btn btn-primary btn-sm" data-save="details">Save</button>
+            </div>
+          </div>
         </div>
 
-        <div class="danger-zone">
-          <h3>Close registration</h3>
-          <p class="muted" style="font-size:13px;margin-bottom:14px;">This stops new guests from registering. You'll be asked to confirm before it takes effect.</p>
-          <button type="button" class="btn btn-secondary btn-sm">Close registration</button>
+        <div class="form-section settings-section" data-section="datetime">
+          <div class="settings-section-header">
+            <h3 class="form-section-title">Date &amp; location</h3>
+            <button type="button" class="settings-edit-btn" data-edit="datetime">Edit</button>
+          </div>
+
+          <div class="settings-view" data-view="datetime">
+            <div class="detail-row"><span class="detail-label">Date</span><span class="detail-value" data-field="settingsDateDisplay">Thursday, October 15, 2026</span></div>
+            <div class="detail-row"><span class="detail-label">Time</span><span class="detail-value" data-field="settingsTimeDisplay">10:00 AM &ndash; 6:00 PM</span></div>
+            <div class="detail-row"><span class="detail-label">Location</span><span class="detail-value" data-field="settingsLoc">Brooklyn, NY</span></div>
+            <div class="detail-row"><span class="detail-label">Organizer</span><span class="detail-value" data-field="settingsHost">Brooklyn Tech Collective</span></div>
+          </div>
+
+          <div class="settings-edit" data-edit-panel="datetime" hidden>
+            <div class="field-row">
+              <div class="field">
+                <label for="settingsDate">Date</label>
+                <input id="settingsDate" type="date" value="2026-10-15">
+              </div>
+              <div class="field">
+                <label for="settingsTime">Start time</label>
+                <input id="settingsTime" type="time" value="10:00">
+              </div>
+              <div class="field">
+                <label for="settingsEndTime">End time</label>
+                <input id="settingsEndTime" type="time" value="18:00">
+              </div>
+              <div class="field" style="margin-bottom:0;">
+                <label for="settingsLoc">Location</label>
+                <input id="settingsLoc" type="text" value="Brooklyn, NY">
+              </div>
+              <div class="field" style="margin-bottom:0;">
+                <label for="settingsHost">Organizer / host</label>
+                <input id="settingsHost" type="text" value="Brooklyn Tech Collective">
+              </div>
+            </div>
+            <div class="settings-edit-actions">
+              <button type="button" class="btn btn-secondary btn-sm" data-cancel="datetime">Cancel</button>
+              <button type="button" class="btn btn-primary btn-sm" data-save="datetime">Save</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section settings-section" data-section="artwork">
+          <div class="settings-section-header">
+            <h3 class="form-section-title">Artwork</h3>
+            <button type="button" class="settings-edit-btn" data-edit="artwork">Edit</button>
+          </div>
+
+          <div class="settings-view" data-view="artwork">
+            <div class="detail-row"><span class="detail-label">Cover image</span><span class="detail-value">No image uploaded</span></div>
+          </div>
+
+          <div class="settings-edit" data-edit-panel="artwork" hidden>
+            <div class="field" style="margin-bottom:0;">
+              <div class="upload-box" style="padding:16px;">Drop an image or click to upload</div>
+            </div>
+            <div class="settings-edit-actions">
+              <button type="button" class="btn btn-secondary btn-sm" data-cancel="artwork">Cancel</button>
+              <button type="button" class="btn btn-primary btn-sm" data-save="artwork">Save</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Share &amp; visibility</h3>
+          <div class="field" style="margin-bottom:16px;">
+            <label for="shareLink">Event link</label>
+            <div class="share-link-row">
+              <input id="shareLink" type="text" readonly value="https://rsvp.app/e/community-tech-night">
+              <button type="button" class="btn btn-secondary btn-sm" id="copyShareLinkBtn">Copy link</button>
+            </div>
+          </div>
+          <div class="field" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
+            <label style="margin:0;">Public event page</label>
+            <label class="toggle"><input id="publicPageToggle" type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Registration</h3>
+          <div class="field" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
+            <label id="registrationOpenLabel" style="margin:0;">Registration open</label>
+            <label class="toggle"><input id="registrationOpenToggle" type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
+          </div>
+          <p id="registrationOpenNotice" class="muted" style="font-size:13px;margin:12px 0 0;">Guests can currently register for this event.</p>
+          <p id="registrationClosedNotice" class="muted" style="font-size:13px;margin:12px 0 0;" hidden>Guests can&rsquo;t register for this event right now.</p>
+        </div>
+
+        <div class="form-section" style="border-bottom:none;padding-bottom:0;">
+          <h3 class="form-section-title">Delete event</h3>
+          <div class="field" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
+            <p class="muted" style="font-size:13px;margin:0;">Permanently deletes this event and all attendee data. This can't be undone.</p>
+            <button type="button" id="deleteEventBtn" class="btn btn-secondary btn-sm" style="border-color:var(--color-error-text);color:var(--color-error-text);flex-shrink:0;">Delete event</button>
+          </div>
         </div>
       </div>
     </section>
   </main>
+</div>
+
+<div id="deleteEventOverlay" class="modal-overlay" hidden>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Delete event">
+    <button type="button" id="closeDeleteEventBtn" class="modal-close" aria-label="Close">&times;</button>
+    <div style="padding:32px;">
+      <h2 style="margin:0 0 8px;">Delete this event?</h2>
+      <p class="muted" style="font-size:13px;margin-bottom:20px;">This permanently deletes <strong>Community Tech Night</strong> and all attendee data. This can't be undone. Type <strong>delete</strong> below to confirm.</p>
+      <div class="field" style="margin-bottom:20px;">
+        <input id="deleteEventConfirmInput" type="text" placeholder="Type delete to confirm">
+      </div>
+      <div class="settings-edit-actions">
+        <button type="button" id="cancelDeleteEventBtn" class="btn btn-secondary btn-sm">Cancel</button>
+        <button type="button" id="confirmDeleteEventBtn" class="btn btn-sm" style="background:var(--color-error-text);color:#fff;" disabled>Delete event</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="registrationConfirmOverlay" class="modal-overlay" hidden>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Confirm registration change">
+    <button type="button" id="closeRegistrationConfirmBtn" class="modal-close" aria-label="Close">&times;</button>
+    <div style="padding:32px;">
+      <h2 id="registrationConfirmTitle" style="margin:0 0 8px;">Close registration?</h2>
+      <p id="registrationConfirmBody" class="muted" style="font-size:13px;margin-bottom:20px;"></p>
+      <div class="settings-edit-actions">
+        <button type="button" id="cancelRegistrationConfirmBtn" class="btn btn-secondary btn-sm">Cancel</button>
+        <button type="button" id="confirmRegistrationConfirmBtn" class="btn btn-primary btn-sm">Confirm</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="workspace.js"></script>
