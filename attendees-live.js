@@ -2,14 +2,21 @@
 // index.html's registration flow (script.js) and organizer.html's check-in
 // flow (organizer.js) read and write. No mock data, no separate logic for
 // what "checked in" means — this just displays what's already there.
-const ATTENDEES_STORAGE_KEY = "rsvpAttendees";
+// ATTENDEES_STORAGE_KEY is declared once, in events.js, which always loads
+// before this file in workspace.html.
 
 function loadLiveAttendees() {
+  let all;
   try {
-    return JSON.parse(localStorage.getItem(ATTENDEES_STORAGE_KEY)) || [];
+    all = JSON.parse(localStorage.getItem(ATTENDEES_STORAGE_KEY)) || [];
   } catch (e) {
-    return [];
+    all = [];
   }
+  // Scoped to the event this workspace page is for (records with no eventId
+  // at all are the pre-event-scoping shape, still shown everywhere).
+  const eventId = typeof getEventIdFromURL === "function" ? getEventIdFromURL() : null;
+  if (!eventId) return all;
+  return all.filter((a) => !a.eventId || a.eventId === eventId);
 }
 
 let attendeesFilter = "all";

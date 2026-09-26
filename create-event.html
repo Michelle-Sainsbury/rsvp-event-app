@@ -16,12 +16,9 @@
       <a href="landing.html" class="wordmark">RSVP</a>
     </div>
     <nav class="sidebar-nav">
-      <a href="dashboard.html">Overview</a>
       <a href="dashboard.html">Events</a>
       <div class="sidebar-label">Your events</div>
-      <a href="workspace.html?event=summer-makers-festival" class="sidebar-event-link">Summer Makers Festival</a>
-      <a href="workspace.html?event=community-tech-night" class="sidebar-event-link">Community Tech Night</a>
-      <a href="workspace.html?event=product-launch-mixer" class="sidebar-event-link">Product Launch Mixer</a>
+      <div id="sidebarEventList"></div>
       <div class="sidebar-divider"></div>
       <a href="create-event.html" class="btn btn-primary btn-sm sidebar-create-btn">+ Create event</a>
     </nav>
@@ -84,13 +81,14 @@
         <div class="form-section" style="border-bottom:none;padding-bottom:0;">
           <h3 class="form-section-title">Artwork</h3>
           <div class="field" style="margin-bottom:0;">
-            <div class="upload-box" style="padding:16px;">Drop an image or click to upload</div>
+            <label for="ceArtworkInput" class="upload-box" id="ceArtworkUploadBox" style="padding:16px;display:block;cursor:pointer;">Drop an image or click to upload</label>
+            <input type="file" id="ceArtworkInput" accept="image/*" hidden>
           </div>
         </div>
 
         <div class="form-actions">
           <button type="button" id="openPreviewBtn" class="btn btn-secondary">Preview guest page</button>
-          <button type="button" class="btn btn-primary">Publish event</button>
+          <button type="button" id="publishEventBtn" class="btn btn-primary">Publish event</button>
         </div>
       </form>
     </div>
@@ -101,7 +99,7 @@
   <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Guest page preview">
     <button type="button" id="closePreviewBtn" class="modal-close" aria-label="Close preview">&times;</button>
     <div class="modal-scroll">
-      <div class="guest-hero placeholder-art">
+      <div class="guest-hero placeholder-art" id="modalPreviewHero">
         <div class="guest-hero-overlay"></div>
         <div class="guest-hero-title">
           <h1 id="modalPreviewName">Your event name</h1>
@@ -128,7 +126,29 @@
   </div>
 </div>
 
+<script src="events.js"></script>
 <script>
+  document.getElementById("sidebarEventList").innerHTML = loadEvents()
+    .map((e) => `<a href="workspace.html?event=${encodeURIComponent(e.id)}" class="sidebar-event-link">${e.name}</a>`)
+    .join("");
+
+  // Holds the newly-picked cover image as a data URL until Publish is
+  // clicked, mirroring workspace.js's settings-tab artwork upload.
+  let ceArtworkDataUrl = null;
+
+  const ceArtworkInput = document.getElementById("ceArtworkInput");
+  const ceArtworkUploadBox = document.getElementById("ceArtworkUploadBox");
+  ceArtworkInput.addEventListener("change", () => {
+    const file = ceArtworkInput.files[0];
+    if (!file) return;
+    fileToCoverImageDataUrl(file)
+      .then((dataUrl) => {
+        ceArtworkDataUrl = dataUrl;
+        ceArtworkUploadBox.innerHTML = `<img src="${ceArtworkDataUrl}" alt="Cover image preview" style="max-height:120px;border-radius:8px;display:block;margin:0 auto;">`;
+      })
+      .catch((e) => alert(e.message || "Couldn't read that image file."));
+  });
+
   function updateGuestPreviewModal() {
     const name = document.getElementById("ceName").value.trim();
     const desc = document.getElementById("ceDesc").value.trim();
@@ -146,6 +166,15 @@
     const dateLabel = date ? new Date(date + "T00:00:00").toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" }) : "Pick a date";
     document.getElementById("modalPreviewDateTime").textContent = start ? `${dateLabel} · ${start}` : dateLabel;
     document.getElementById("modalPreviewAvail").textContent = capacity ? `0 of ${capacity} spots filled` : "Set a capacity to see availability";
+
+    const hero = document.getElementById("modalPreviewHero");
+    if (ceArtworkDataUrl) {
+      hero.style.backgroundImage = `url("${ceArtworkDataUrl}")`;
+      hero.style.backgroundSize = "cover";
+      hero.style.backgroundPosition = "center";
+    } else {
+      hero.style.backgroundImage = "";
+    }
   }
 
   const previewOverlay = document.getElementById("previewModalOverlay");
@@ -161,6 +190,39 @@
   });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") previewOverlay.hidden = true;
+  });
+
+  document.getElementById("publishEventBtn").addEventListener("click", () => {
+    const name = document.getElementById("ceName").value.trim();
+    if (!name) {
+      alert("Give the event a name before publishing.");
+      document.getElementById("ceName").focus();
+      return;
+    }
+
+    const event = {
+      id: slugifyEventName(name),
+      name: name,
+      description: document.getElementById("ceDesc").value.trim(),
+      date: document.getElementById("ceDate").value,
+      startTime: document.getElementById("ceStart").value,
+      endTime: document.getElementById("ceEnd").value,
+      location: document.getElementById("ceLocation").value.trim(),
+      organizer: document.getElementById("ceHost").value.trim(),
+      capacity: Number(document.getElementById("ceCapacity").value) || 0,
+      registrationOpen: true,
+      draft: false,
+      artClass: "placeholder-art",
+    };
+    if (ceArtworkDataUrl) event.coverImage = ceArtworkDataUrl;
+
+    try {
+      upsertEvent(event);
+    } catch (e) {
+      alert(e.message || "Couldn't publish this event.");
+      return;
+    }
+    window.location.href = `workspace.html?event=${encodeURIComponent(event.id)}`;
   });
 </script>
 

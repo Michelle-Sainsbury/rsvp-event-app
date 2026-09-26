@@ -1,6 +1,31 @@
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translate(-50%, 12px);
+  background: var(--color-ink);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-card);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
 .event-header {
   position: relative;
-  min-height: 245px;
+  aspect-ratio: 782 / 195;
+  min-height: 195px;
   border-radius: 0;
   overflow: hidden;
   margin: -32px -40px 0;
@@ -18,8 +43,8 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 20px 32px 34px;
+  justify-content: flex-start;
+  padding: 12px 40px 15px;
 }
 
 .event-header-top {
@@ -31,21 +56,25 @@
 }
 
 .event-header-meta {
-  margin-top: auto;
+  margin-top: 10px;
 }
 
 .event-header-meta h1 {
   font-family: var(--font-display);
-  font-size: 56px;
+  font-size: 54px;
   font-weight: 500;
-  line-height: 1.05;
-  margin: 0 0 12px;
-  color: var(--color-ink);
+  font-style: normal;
+  line-height: 0.96;
+  letter-spacing: -0.02em;
+  margin: 0 0 11px;
+  color: #101010;
+  max-width: 520px;
+  text-align: left;
 }
 
 .event-header-sub {
   color: var(--color-ink);
-  font-size: 15px;
+  font-size: 17px;
   margin-bottom: 2px;
 }
 
@@ -612,8 +641,54 @@
   margin-bottom: 12px;
 }
 
-/* Settings tab: each section is static text until its own "Edit" button
-   is clicked (see workspace.js toggleSettingsEdit). */
+/* Settings tab: each section is its own card, laid out in a responsive
+   grid; each is static text until its own "Edit" button is clicked
+   (see workspace.js toggleSettingsEdit). */
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 980px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The view/edit panels differ in height (a textarea vs. a single line
+   of text, say), so without this the card would grow or shrink when its
+   "Edit" button is clicked. Stacking both in the same grid cell makes
+   the card size to the taller of the two at all times. */
+.settings-toggle-card {
+  display: grid;
+  grid-template-rows: auto auto;
+}
+
+.settings-toggle-card > .settings-view,
+.settings-toggle-card > .settings-edit {
+  grid-row: 2;
+  grid-column: 1;
+}
+
+.settings-toggle-card > .settings-view[hidden],
+.settings-toggle-card > .settings-edit[hidden] {
+  display: block !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Hiding the Edit button while editing (workspace.js) would otherwise
+   shrink the header row, since the button is taller than the bare
+   title text — keep its space reserved so the header stays put too. */
+.settings-toggle-card .settings-edit-btn[hidden] {
+  display: inline-flex !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .settings-section-header {
   display: flex;
   align-items: center;

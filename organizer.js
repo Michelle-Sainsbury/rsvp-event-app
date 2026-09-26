@@ -1,17 +1,27 @@
-// Mock event data. Matches the event shown on index.html; once the backend
-// is ready, replace with a fetch() call keyed by eventId.
-const currentEvent = {
-  eventId: "evt1",
-  name: "Community Tech Night",
-  organizer: "Brooklyn Tech Collective",
-};
+// Reuses workspace.js's `currentEvent` when this is embedded in
+// workspace.html (so a Settings edit and this Check-in card always agree).
+// Falls back to computing it directly for the standalone organizer.html
+// page, where workspace.js isn't loaded, and finally to the original
+// hardcoded demo event if events.js isn't loaded either — see events.js's
+// getEventById/getEventIdFromURL (this is the "once the backend is ready,
+// replace with a fetch() call keyed by eventId" fetch, minus the backend).
+const organizerEvent =
+  (typeof currentEvent !== "undefined" && currentEvent) ||
+  (typeof getEventById === "function" && getEventById((typeof getEventIdFromURL === "function" && getEventIdFromURL()) || "")) ||
+  { id: "community-tech-night", name: "Community Tech Night", organizer: "Brooklyn Tech Collective" };
 
 const STORAGE_KEY = "rsvpAttendees";
 
 // Real attendees come from index.html's registration flow, which writes
 // { name, email, ticketId, checkedIn } objects to localStorage under
-// STORAGE_KEY. Loaded once on page load; check-ins write back to it.
+// STORAGE_KEY. Loaded once on page load; check-ins write back to it. This
+// always holds every event's attendees — never reassign it to a filtered
+// subset, or saving would silently drop every other event's records.
 function loadRealAttendees() {
+  // events.js seeds a realistic starting attendee list per event on first
+  // load; fall back to a plain unseeded read when it isn't loaded
+  // (organizer.html standalone).
+  if (typeof loadAllAttendees === "function") return loadAllAttendees();
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
   } catch (e) {
@@ -25,16 +35,6 @@ function saveRealAttendees() {
 
 let realAttendees = loadRealAttendees();
 
-// Seed attendees so the dashboard has something to show/search/check in
-// before anyone has actually registered through index.html. Same shape as
-// real attendees so all the same code paths apply.
-const seedAttendees = [
-  { ticketId: "SEED-1001", name: "Jordan Lee", email: "jordan@example.com", checkedIn: false },
-  { ticketId: "SEED-1002", name: "Priya Shah", email: "priya@example.com", checkedIn: false },
-  { ticketId: "SEED-1003", name: "Sam Okafor", email: "sam@example.com", checkedIn: true },
-  { ticketId: "SEED-1004", name: "Casey Kim", email: "casey@example.com", checkedIn: false },
-];
-
 // Dev-only: names that look like real attendees but whose "Scan" button
 // always fails check-in, so both failure paths can be tested.
 // Alex Rivera: well-formed-looking ticket ID, but no registration matches it.
@@ -44,8 +44,12 @@ const devFakeAttendees = [
   { name: "Taylor Morgan", payload: "" },
 ];
 
+// Attendees for THIS event only. Records with no eventId at all (the
+// original pre-event-scoping shape) are treated as belonging to whichever
+// event is current, so the standalone index.html/organizer.html pair keeps
+// working unscoped exactly as before.
 function getAllAttendees() {
-  return [...realAttendees, ...seedAttendees];
+  return realAttendees.filter((a) => !a.eventId || a.eventId === organizerEvent.id);
 }
 
 let nameSearchTerm = "";
@@ -61,11 +65,12 @@ function checkInAttendee(raw) {
     return;
   }
 
-  let attendee = realAttendees.find((a) => a.ticketId === ticketId);
-  const isReal = Boolean(attendee);
-  if (!attendee) {
-    attendee = seedAttendees.find((a) => a.ticketId === ticketId);
-  }
+  // Scoped to this event: a real ticket ID only matches if it belongs to
+  // the event this Check-in tab is for (or has no eventId at all, for the
+  // pre-event-scoping standalone flow).
+  const attendee = realAttendees.find(
+    (a) => a.ticketId === ticketId && (!a.eventId || a.eventId === organizerEvent.id)
+  );
 
   if (!attendee) {
     checkInMessage = { type: "error", text: "No matching registration found." };
@@ -80,7 +85,7 @@ function checkInAttendee(raw) {
   }
 
   attendee.checkedIn = true;
-  if (isReal) saveRealAttendees();
+  saveRealAttendees();
   checkInMessage = { type: "success", text: `${attendee.name} checked in successfully.` };
   render();
 }
@@ -117,9 +122,9 @@ function render() {
 
   app.innerHTML = `
     <section class="event-info-card">
-      <h2>${currentEvent.name}</h2>
-      <p><strong>Organizer:</strong> ${currentEvent.organizer}</p>
-      <p><strong>Event ID:</strong> ${currentEvent.eventId}</p>
+      <h2>${organizerEvent.name}</h2>
+      <p><strong>Organizer:</strong> ${organizerEvent.organizer}</p>
+      <p><strong>Event ID:</strong> ${organizerEvent.id}</p>
     </section>
 
     <section class="summary-card">
@@ -147,7 +152,7 @@ function render() {
       <div class="dev-panel">
         <p class="dev-panel-label">Dev tools: simulate scanning a QR code</p>
         <div class="dev-panel-buttons">
-          ${[...seedAttendees, ...devFakeAttendees]
+          ${[...attendees.filter((a) => !a.checkedIn).slice(0, 4), ...devFakeAttendees]
             .map(
               (a) => `
             <button

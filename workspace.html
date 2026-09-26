@@ -24,9 +24,7 @@
     <nav class="sidebar-nav">
       <a href="dashboard.html">Events</a>
       <div class="sidebar-label">Your events</div>
-      <a href="workspace.html?event=summer-makers-festival" class="sidebar-event-link">Summer Makers Festival</a>
-      <a href="workspace.html?event=community-tech-night" class="sidebar-event-link active">Community Tech Night</a>
-      <a href="workspace.html?event=product-launch-mixer" class="sidebar-event-link">Product Launch Mixer</a>
+      <div id="sidebarEventList"></div>
       <div class="sidebar-divider"></div>
       <a href="create-event.html" class="btn btn-primary btn-sm sidebar-create-btn">+ Create event</a>
     </nav>
@@ -34,18 +32,18 @@
 
   <main class="main">
     <div class="event-header">
-      <div class="event-header-art placeholder-art"></div>
+      <div class="event-header-art placeholder-art" id="eventHeaderArt"></div>
       <div class="event-header-overlay">
         <div class="event-header-top">
           <div class="event-header-actions">
-            <a href="public-event.html" class="btn btn-secondary">View event page</a>
+            <a href="public-event.html" id="viewEventPageLink" class="btn btn-secondary">View event page</a>
             <a href="#" class="btn btn-ink" onclick="showTab('settings'); return false;">Edit event</a>
           </div>
         </div>
         <div class="event-header-meta">
-          <h1>Community Tech Night</h1>
-          <div class="event-header-sub">Thursday, October 15, 2026 &middot; 10:00 AM &ndash; 6:00 PM</div>
-          <div class="event-header-sub">Brooklyn, NY</div>
+          <h1 id="eventHeaderName">Community Tech Night</h1>
+          <div class="event-header-sub" id="eventHeaderDateTime">Thursday, October 15, 2026 &middot; 10:00 AM &ndash; 6:00 PM</div>
+          <div class="event-header-sub" id="eventHeaderLocation">Brooklyn, NY</div>
         </div>
       </div>
     </div>
@@ -60,30 +58,33 @@
     <section id="tab-overview" class="tab-content active">
       <div class="stat-grid">
         <div class="stat-card">
-          <div class="stat-value">54</div>
+          <div class="stat-value" id="statRegistered">0</div>
           <div class="stat-label">Registered</div>
         </div>
         <div class="stat-card">
-          <div class="stat-value" style="color:var(--color-accent);">36</div>
+          <div class="stat-value" id="statCheckedIn" style="color:var(--color-accent);">0</div>
           <div class="stat-label">Checked in</div>
         </div>
         <div class="stat-card">
-          <div class="stat-value" style="color:#9AA97D;">18</div>
+          <div class="stat-value" id="statNotCheckedIn" style="color:#9AA97D;">0</div>
           <div class="stat-label">Not checked in</div>
         </div>
         <div class="stat-card">
-          <div class="stat-value">80</div>
+          <div class="stat-value" id="statCapacity">0</div>
           <div class="stat-label">Capacity</div>
         </div>
         <div class="stat-card">
-          <div class="stat-value">26</div>
+          <div class="stat-value" id="statRemaining">0</div>
           <div class="stat-label">Tickets remaining</div>
         </div>
       </div>
 
       <div class="two-col" style="grid-template-columns:1.4fr 1fr;margin-top:20px;">
         <div class="card">
-          <h3>Check-ins by hour</h3>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;">
+            <h3>Check-ins by hour</h3>
+            <p class="muted" style="font-size:12px;margin:0;white-space:nowrap;">Peak: <strong style="color:var(--color-ink);">11 AM</strong> &middot; 11 check-ins</p>
+          </div>
           <div class="hourly-chart-row">
             <div class="hourly-yaxis">
               <span>12</span>
@@ -150,20 +151,19 @@
               </div>
             </div>
           </div>
-          <p class="muted" style="font-size:12px;text-align:right;margin:10px 0 0;">Peak: <strong style="color:var(--color-ink);">11 AM</strong> &middot; 11 check-ins</p>
         </div>
         <div class="card">
           <h3>Check-in rate</h3>
           <div class="ring-wrap">
-            <div class="ring">
+            <div class="ring" id="checkinRing">
               <div class="ring-inner">
-                <span class="pct">67%</span>
-                <span class="lbl">of 54</span>
+                <span class="pct" id="checkinRingPct">0%</span>
+                <span class="lbl" id="checkinRingLbl">of 0</span>
               </div>
             </div>
             <div class="legend">
-              <div class="legend-item"><span class="legend-dot" style="background:var(--color-accent)"></span>Checked in (36)</div>
-              <div class="legend-item"><span class="legend-dot" style="background:#9AA97D"></span>Not checked in (18)</div>
+              <div class="legend-item"><span class="legend-dot" style="background:var(--color-accent)"></span><span id="legendCheckedIn">Checked in (0)</span></div>
+              <div class="legend-item"><span class="legend-dot" style="background:#9AA97D"></span><span id="legendNotCheckedIn">Not checked in (0)</span></div>
             </div>
           </div>
         </div>
@@ -213,34 +213,34 @@
         <div class="arrival-summary">
           <div class="arrival-cards">
             <div class="arrival-card">
-              <div class="arrival-value">80</div>
+              <div class="arrival-value" id="arrivalCapacity">80</div>
               <div class="arrival-label">Capacity</div>
             </div>
             <div class="arrival-card">
-              <div class="arrival-value">54</div>
+              <div class="arrival-value" id="arrivalRegistered">54</div>
               <div class="arrival-label">Registered</div>
             </div>
             <div class="arrival-card">
-              <div class="arrival-value">36</div>
+              <div class="arrival-value" id="arrivalCheckedIn">36</div>
               <div class="arrival-label">Checked in</div>
             </div>
           </div>
           <div class="arrival-progress-card">
             <h3 class="arrival-progress-title">Event turnout</h3>
             <div class="arrival-progress-labels">
-              <span>36 of 54 arrived</span>
-              <span>67%</span>
+              <span id="arrivalProgressText">36 of 54 arrived</span>
+              <span id="arrivalProgressPct">67%</span>
             </div>
-            <div class="progress-bar"><div class="progress-bar-fill" style="width:67%"></div></div>
+            <div class="progress-bar"><div class="progress-bar-fill" id="arrivalProgressFill" style="width:67%"></div></div>
           </div>
         </div>
       </div>
     </section>
 
     <section id="tab-settings" class="tab-content">
-      <div class="card create-event-form" style="max-width:820px;">
+      <div class="settings-grid">
 
-        <div class="form-section settings-section" data-section="details">
+        <div class="card settings-toggle-card" data-section="details">
           <div class="settings-section-header">
             <h3 class="form-section-title">Event details</h3>
             <button type="button" class="settings-edit-btn" data-edit="details">Edit</button>
@@ -274,7 +274,7 @@
           </div>
         </div>
 
-        <div class="form-section settings-section" data-section="datetime">
+        <div class="card settings-toggle-card" data-section="datetime">
           <div class="settings-section-header">
             <h3 class="form-section-title">Date &amp; location</h3>
             <button type="button" class="settings-edit-btn" data-edit="datetime">Edit</button>
@@ -317,19 +317,20 @@
           </div>
         </div>
 
-        <div class="form-section settings-section" data-section="artwork">
+        <div class="card settings-toggle-card" data-section="artwork">
           <div class="settings-section-header">
             <h3 class="form-section-title">Artwork</h3>
             <button type="button" class="settings-edit-btn" data-edit="artwork">Edit</button>
           </div>
 
           <div class="settings-view" data-view="artwork">
-            <div class="detail-row"><span class="detail-label">Cover image</span><span class="detail-value">No image uploaded</span></div>
+            <div class="detail-row"><span class="detail-label">Cover image</span><span class="detail-value" data-field="settingsArtwork">No image uploaded</span></div>
           </div>
 
           <div class="settings-edit" data-edit-panel="artwork" hidden>
             <div class="field" style="margin-bottom:0;">
-              <div class="upload-box" style="padding:16px;">Drop an image or click to upload</div>
+              <label for="artworkFileInput" class="upload-box" id="artworkUploadBox" style="padding:16px;display:block;cursor:pointer;">Drop an image or click to upload</label>
+              <input type="file" id="artworkFileInput" accept="image/*" hidden>
             </div>
             <div class="settings-edit-actions">
               <button type="button" class="btn btn-secondary btn-sm" data-cancel="artwork">Cancel</button>
@@ -338,13 +339,14 @@
           </div>
         </div>
 
-        <div class="form-section">
+        <div class="card">
           <h3 class="form-section-title">Share &amp; visibility</h3>
           <div class="field" style="margin-bottom:16px;">
             <label for="shareLink">Event link</label>
             <div class="share-link-row">
               <input id="shareLink" type="text" readonly value="https://rsvp.app/e/community-tech-night">
               <button type="button" class="btn btn-secondary btn-sm" id="copyShareLinkBtn">Copy link</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="testShareLinkBtn">Test link</button>
             </div>
           </div>
           <div class="field" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
@@ -353,7 +355,7 @@
           </div>
         </div>
 
-        <div class="form-section">
+        <div class="card">
           <h3 class="form-section-title">Registration</h3>
           <div class="field" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
             <label id="registrationOpenLabel" style="margin:0;">Registration open</label>
@@ -363,13 +365,14 @@
           <p id="registrationClosedNotice" class="muted" style="font-size:13px;margin:12px 0 0;" hidden>Guests can&rsquo;t register for this event right now.</p>
         </div>
 
-        <div class="form-section" style="border-bottom:none;padding-bottom:0;">
+        <div class="card" style="grid-column:1 / -1;">
           <h3 class="form-section-title">Delete event</h3>
           <div class="field" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
             <p class="muted" style="font-size:13px;margin:0;">Permanently deletes this event and all attendee data. This can't be undone.</p>
             <button type="button" id="deleteEventBtn" class="btn btn-secondary btn-sm" style="border-color:var(--color-error-text);color:var(--color-error-text);flex-shrink:0;">Delete event</button>
           </div>
         </div>
+
       </div>
     </section>
   </main>
@@ -406,6 +409,9 @@
   </div>
 </div>
 
+<div id="toast" class="toast" hidden></div>
+
+<script src="events.js"></script>
 <script src="workspace.js"></script>
 <script src="attendees-live.js"></script>
 <script src="https://unpkg.com/html5-qrcode"></script>

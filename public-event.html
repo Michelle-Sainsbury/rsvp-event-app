@@ -9,41 +9,50 @@
 </head>
 <body>
 
-<div class="guest-hero placeholder-art">
-  <div class="guest-hero-overlay"></div>
-  <div class="guest-hero-title">
-    <h1>Community Tech Night</h1>
-  </div>
+<div class="guest-brand-bar">
+  <a href="landing.html" class="wordmark">RSVP</a>
 </div>
 
-<div class="guest-page">
-  <div class="guest-meta-row">
-    <div><span class="label">Date &amp; time</span>Thursday, October 15, 2026 &middot; 10:00 AM &ndash; 6:00 PM</div>
-    <div><span class="label">Location</span>Brooklyn, NY</div>
-    <div><span class="label">Hosted by</span>Brooklyn Tech Collective</div>
-  </div>
+<div class="guest-main">
 
-  <p>
-    Join us for an evening of lightning talks, live demos, and hands-on workshops from
-    builders across the Brooklyn tech scene. Whether you're shipping your first side
-    project or your tenth startup, come meet the people building alongside you. Light
-    refreshments and plenty of time to connect will follow the talks.
-  </p>
-
-  <div class="guest-availability">
-    <div>
-      <div class="avail-text">54 of 80 spots filled &mdash; 26 remaining</div>
-      <div class="progress-bar"><div class="progress-bar-fill" style="width:67%"></div></div>
+  <div class="guest-hero placeholder-art" id="guestHero">
+    <div class="guest-hero-overlay"></div>
+    <div class="guest-hero-title">
+      <div class="guest-hero-eyebrow" id="guestHeroLocation">Brooklyn, NY</div>
+      <h1 id="guestHeroName">Community Tech Night</h1>
     </div>
-    <a href="#live-registration" class="btn btn-primary">Register</a>
   </div>
 
-  <div id="live-registration" class="live-embed-section">
-    <main id="app"></main>
+  <div id="live-registration">
+    <main id="app" class="guest-columns">
+      <div id="appInfo"></div>
+      <div id="appForm"></div>
+    </main>
   </div>
+
 </div>
 
+<script src="events.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="script.js"></script>
+<script>
+  (function () {
+    const eventId = new URLSearchParams(window.location.search).get("event") || "community-tech-night";
+    const event = typeof getEventById === "function" ? getEventById(eventId) : null;
+    if (!event) return;
+
+    document.title = `RSVP | ${event.name}`;
+    document.getElementById("guestHeroName").textContent = event.name;
+    document.getElementById("guestHeroLocation").textContent = event.location;
+
+    const hero = document.getElementById("guestHero");
+    if (event.artClass) hero.classList.add(event.artClass);
+    if (event.coverImage) {
+      hero.style.backgroundImage = `url("${event.coverImage}")`;
+      hero.style.backgroundSize = "cover";
+      hero.style.backgroundPosition = "center";
+    }
+  })();
+</script>
 </body>
 </html>

@@ -1,3 +1,126 @@
+// The event this workspace page is for, read from ?event=<id> and looked up
+// in events.js's shared store. Falls back to the original demo event if the
+// id isn't found (e.g. events.js hasn't seeded yet), so the page never
+// renders blank.
+const currentEventId = (typeof getEventIdFromURL === "function" && getEventIdFromURL()) || "community-tech-night";
+let currentEvent =
+  (typeof getEventById === "function" && getEventById(currentEventId)) || {
+    id: currentEventId,
+    name: "Community Tech Night",
+    description: "Join us for an evening of lightning talks, demos, and networking with Brooklyn's tech community.",
+    date: "2026-10-15",
+    startTime: "10:00",
+    endTime: "18:00",
+    location: "Brooklyn, NY",
+    organizer: "Brooklyn Tech Collective",
+    capacity: 80,
+    registrationOpen: true,
+    artClass: "placeholder-art",
+  };
+
+function formatSettingsDate(dateStr) {
+  const d = new Date(dateStr + "T00:00:00");
+  return d.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+}
+
+function formatSettingsTime(t) {
+  const [h, m] = t.split(":").map(Number);
+  const period = h >= 12 ? "PM" : "AM";
+  const hour12 = ((h + 11) % 12) + 1;
+  return `${hour12}:${String(m).padStart(2, "0")} ${period}`;
+}
+
+function persistCurrentEvent() {
+  if (typeof upsertEvent === "function") upsertEvent(currentEvent);
+}
+
+function getCurrentEventAttendees() {
+  return typeof getAttendeesForEvent === "function" ? getAttendeesForEvent(currentEvent.id) : [];
+}
+
+// ---- Sidebar: real event list, current one highlighted ----
+function renderSidebar() {
+  const list = document.getElementById("sidebarEventList");
+  if (!list || typeof loadEvents !== "function") return;
+  list.innerHTML = loadEvents()
+    .map((e) => {
+      const active = e.id === currentEvent.id ? " active" : "";
+      return `<a href="workspace.html?event=${encodeURIComponent(e.id)}" class="sidebar-event-link${active}">${e.name}</a>`;
+    })
+    .join("");
+}
+
+// ---- Header: name, date/time, location, art, view-event-page link ----
+function renderHeader() {
+  document.title = `RSVP | ${currentEvent.name}`;
+  const nameEl = document.getElementById("eventHeaderName");
+  nameEl.innerHTML = "";
+  const nameWords = currentEvent.name.split(" ");
+  nameEl.appendChild(document.createTextNode(nameWords[0]));
+  if (nameWords.length > 1) {
+    nameEl.appendChild(document.createElement("br"));
+    nameEl.appendChild(document.createTextNode(nameWords.slice(1).join(" ")));
+  }
+  document.getElementById("eventHeaderDateTime").textContent =
+    `${formatSettingsDate(currentEvent.date)} · ${formatSettingsTime(currentEvent.startTime)} – ${formatSettingsTime(currentEvent.endTime)}`;
+  document.getElementById("eventHeaderLocation").textContent = currentEvent.location;
+
+  const art = document.getElementById("eventHeaderArt");
+  art.className = `event-header-art ${currentEvent.artClass || "placeholder-art"}`;
+  if (currentEvent.coverImage) {
+    art.style.backgroundImage = `url("${currentEvent.coverImage}")`;
+    art.style.backgroundSize = "cover";
+    art.style.backgroundPosition = "center 65%";
+  } else {
+    art.style.backgroundImage = "";
+  }
+
+  const viewLink = document.getElementById("viewEventPageLink");
+  viewLink.href = `public-event.html?event=${encodeURIComponent(currentEvent.id)}`;
+}
+
+// ---- Overview tab: real attendee counts + check-in rate ring ----
+function renderOverview() {
+  const attendees = getCurrentEventAttendees();
+  const registered = attendees.length;
+  const checkedIn = attendees.filter((a) => a.checkedIn).length;
+  const notCheckedIn = registered - checkedIn;
+  const capacity = currentEvent.capacity || 0;
+  const remaining = Math.max(capacity - registered, 0);
+  const pct = registered ? Math.round((checkedIn / registered) * 100) : 0;
+
+  document.getElementById("statRegistered").textContent = registered;
+  document.getElementById("statCheckedIn").textContent = checkedIn;
+  document.getElementById("statNotCheckedIn").textContent = notCheckedIn;
+  document.getElementById("statCapacity").textContent = capacity;
+  document.getElementById("statRemaining").textContent = remaining;
+
+  document.getElementById("checkinRingPct").textContent = `${pct}%`;
+  document.getElementById("checkinRingLbl").textContent = `of ${registered}`;
+  document.getElementById("legendCheckedIn").textContent = `Checked in (${checkedIn})`;
+  document.getElementById("legendNotCheckedIn").textContent = `Not checked in (${notCheckedIn})`;
+  document.getElementById("checkinRing").style.background =
+    `conic-gradient(var(--color-accent) 0% ${pct}%, #9AA97D ${pct}% 100%)`;
+}
+
+// Check-in tab's arrival-summary cards — same real numbers as the Overview
+// tab, since check-ins happen right there and organizers shouldn't have to
+// tab away to see whether the count moved.
+function renderArrivalSummary() {
+  const attendees = getCurrentEventAttendees();
+  const registered = attendees.length;
+  const checkedIn = attendees.filter((a) => a.checkedIn).length;
+  const capacity = currentEvent.capacity || 0;
+  const pct = registered ? Math.round((checkedIn / registered) * 100) : 0;
+
+  document.getElementById("arrivalCapacity").textContent = capacity;
+  document.getElementById("arrivalRegistered").textContent = registered;
+  document.getElementById("arrivalCheckedIn").textContent = checkedIn;
+  document.getElementById("arrivalProgressText").textContent = `${checkedIn} of ${registered} arrived`;
+  document.getElementById("arrivalProgressPct").textContent = `${pct}%`;
+  document.getElementById("arrivalProgressFill").style.width = `${pct}%`;
+}
+
 function showTab(name) {
   document.querySelectorAll(".tab-content").forEach((el) => {
     el.classList.toggle("active", el.id === "tab-" + name);
@@ -5,6 +128,8 @@ function showTab(name) {
   document.querySelectorAll(".tab-bar [data-tab]").forEach((el) => {
     el.classList.toggle("active", el.getAttribute("data-tab") === name);
   });
+  if (name === "overview") renderOverview();
+  if (name === "checkin") renderArrivalSummary();
 }
 
 document.querySelectorAll(".tab-bar [data-tab]").forEach((el) => {
@@ -26,66 +151,111 @@ function toggleSettingsEdit(section, editing) {
   if (editBtn) editBtn.hidden = editing;
 }
 
-function formatSettingsDate(dateStr) {
-  const d = new Date(dateStr + "T00:00:00");
-  return d.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
-}
+// Holds a newly-picked (not yet saved) cover image as a data URL, so
+// Cancel can drop it and Save can commit it to currentEvent.
+let pendingArtworkDataUrl = null;
 
-function formatSettingsTime(t) {
-  const [h, m] = t.split(":").map(Number);
-  const period = h >= 12 ? "PM" : "AM";
-  const hour12 = ((h + 11) % 12) + 1;
-  return `${hour12}:${String(m).padStart(2, "0")} ${period}`;
+function renderUploadBoxPreview(dataUrl) {
+  const box = document.getElementById("artworkUploadBox");
+  if (!box) return;
+  if (dataUrl) {
+    box.innerHTML = `<img src="${dataUrl}" alt="Cover image preview" style="max-height:120px;border-radius:8px;display:block;margin:0 auto;">`;
+  } else {
+    box.textContent = "Drop an image or click to upload";
+  }
 }
-
-// Source of truth for the editable fields, so Cancel can restore inputs
-// to their last-saved values instead of leaving a discarded edit behind.
-const settingsData = {
-  name: "Community Tech Night",
-  capacity: "80",
-  desc: "Join us for an evening of lightning talks, demos, and networking with Brooklyn's tech community.",
-  date: "2026-10-15",
-  time: "10:00",
-  endTime: "18:00",
-  loc: "Brooklyn, NY",
-  host: "Brooklyn Tech Collective",
-};
 
 function populateSettingsInputs(section) {
   if (section === "details") {
-    document.getElementById("settingsName").value = settingsData.name;
-    document.getElementById("settingsCap").value = settingsData.capacity;
-    document.getElementById("settingsDesc").value = settingsData.desc;
+    document.getElementById("settingsName").value = currentEvent.name;
+    document.getElementById("settingsCap").value = currentEvent.capacity;
+    document.getElementById("settingsDesc").value = currentEvent.description;
   } else if (section === "datetime") {
-    document.getElementById("settingsDate").value = settingsData.date;
-    document.getElementById("settingsTime").value = settingsData.time;
-    document.getElementById("settingsEndTime").value = settingsData.endTime;
-    document.getElementById("settingsLoc").value = settingsData.loc;
-    document.getElementById("settingsHost").value = settingsData.host;
+    document.getElementById("settingsDate").value = currentEvent.date;
+    document.getElementById("settingsTime").value = currentEvent.startTime;
+    document.getElementById("settingsEndTime").value = currentEvent.endTime;
+    document.getElementById("settingsLoc").value = currentEvent.location;
+    document.getElementById("settingsHost").value = currentEvent.organizer;
+  } else if (section === "artwork") {
+    pendingArtworkDataUrl = null;
+    document.getElementById("artworkFileInput").value = "";
+    renderUploadBoxPreview(currentEvent.coverImage);
   }
 }
 
+const artworkFileInput = document.getElementById("artworkFileInput");
+if (artworkFileInput) {
+  artworkFileInput.addEventListener("change", () => {
+    const file = artworkFileInput.files[0];
+    if (!file) return;
+    fileToCoverImageDataUrl(file)
+      .then((dataUrl) => {
+        pendingArtworkDataUrl = dataUrl;
+        renderUploadBoxPreview(pendingArtworkDataUrl);
+      })
+      .catch((e) => alert(e.message || "Couldn't read that image file."));
+  });
+}
+
+function renderSettingsView() {
+  document.querySelector('[data-field="settingsName"]').textContent = currentEvent.name;
+  document.querySelector('[data-field="settingsCap"]').textContent = currentEvent.capacity;
+  document.querySelector('[data-field="settingsDesc"]').textContent = currentEvent.description;
+  document.querySelector('[data-field="settingsDateDisplay"]').textContent = formatSettingsDate(currentEvent.date);
+  document.querySelector('[data-field="settingsTimeDisplay"]').textContent =
+    `${formatSettingsTime(currentEvent.startTime)} – ${formatSettingsTime(currentEvent.endTime)}`;
+  document.querySelector('[data-field="settingsLoc"]').textContent = currentEvent.location;
+  document.querySelector('[data-field="settingsHost"]').textContent = currentEvent.organizer;
+  document.querySelector('[data-field="settingsArtwork"]').textContent =
+    currentEvent.coverImage ? "Custom image uploaded" : "No image uploaded";
+}
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+  toast.textContent = message;
+  toast.hidden = false;
+  // Force layout so the next class change actually transitions in, even
+  // if a previous toast just got hidden.
+  void toast.offsetWidth;
+  toast.classList.add("show");
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => { toast.hidden = true; }, 200);
+  }, 2200);
+}
+
 function saveSettingsSection(section) {
+  let artworkChanged = false;
   if (section === "details") {
-    settingsData.name = document.getElementById("settingsName").value;
-    settingsData.capacity = document.getElementById("settingsCap").value;
-    settingsData.desc = document.getElementById("settingsDesc").value;
-    document.querySelector('[data-field="settingsName"]').textContent = settingsData.name;
-    document.querySelector('[data-field="settingsCap"]').textContent = settingsData.capacity;
-    document.querySelector('[data-field="settingsDesc"]').textContent = settingsData.desc;
+    currentEvent.name = document.getElementById("settingsName").value;
+    currentEvent.capacity = Number(document.getElementById("settingsCap").value) || 0;
+    currentEvent.description = document.getElementById("settingsDesc").value;
   } else if (section === "datetime") {
-    settingsData.date = document.getElementById("settingsDate").value;
-    settingsData.time = document.getElementById("settingsTime").value;
-    settingsData.endTime = document.getElementById("settingsEndTime").value;
-    settingsData.loc = document.getElementById("settingsLoc").value;
-    settingsData.host = document.getElementById("settingsHost").value;
-    document.querySelector('[data-field="settingsDateDisplay"]').textContent = formatSettingsDate(settingsData.date);
-    document.querySelector('[data-field="settingsTimeDisplay"]').textContent =
-      `${formatSettingsTime(settingsData.time)} – ${formatSettingsTime(settingsData.endTime)}`;
-    document.querySelector('[data-field="settingsLoc"]').textContent = settingsData.loc;
-    document.querySelector('[data-field="settingsHost"]').textContent = settingsData.host;
+    currentEvent.date = document.getElementById("settingsDate").value;
+    currentEvent.startTime = document.getElementById("settingsTime").value;
+    currentEvent.endTime = document.getElementById("settingsEndTime").value;
+    currentEvent.location = document.getElementById("settingsLoc").value;
+    currentEvent.organizer = document.getElementById("settingsHost").value;
+  } else if (section === "artwork") {
+    if (pendingArtworkDataUrl && pendingArtworkDataUrl !== currentEvent.coverImage) {
+      currentEvent.coverImage = pendingArtworkDataUrl;
+      artworkChanged = true;
+    }
+    pendingArtworkDataUrl = null;
   }
+  try {
+    persistCurrentEvent();
+  } catch (e) {
+    alert(e.message || "Couldn't save changes.");
+    return;
+  }
+  renderSettingsView();
+  renderHeader();
+  renderSidebar();
   toggleSettingsEdit(section, false);
+  if (artworkChanged) showToast("Artwork updated");
 }
 
 function cancelSettingsSection(section) {
@@ -124,6 +294,8 @@ if (registrationOpenToggle) {
     registrationOpenLabel.textContent = isOpen ? "Registration open" : "Registration closed";
     registrationOpenNotice.hidden = !isOpen;
     registrationClosedNotice.hidden = isOpen;
+    currentEvent.registrationOpen = isOpen;
+    persistCurrentEvent();
   }
 
   function closeRegistrationConfirm() {
@@ -159,22 +331,37 @@ if (registrationOpenToggle) {
   registrationConfirmOverlay.addEventListener("click", (e) => {
     if (e.target === registrationConfirmOverlay) closeRegistrationConfirm();
   });
+
+  // Reflect the event's real stored state on load, not always "open".
+  applyRegistrationState(currentEvent.registrationOpen !== false);
 }
 
 const copyShareLinkBtn = document.getElementById("copyShareLinkBtn");
 if (copyShareLinkBtn) {
+  const shareLinkInput = document.getElementById("shareLink");
+  shareLinkInput.value = new URL(`public-event.html?event=${encodeURIComponent(currentEvent.id)}`, window.location.href).href;
+
   copyShareLinkBtn.addEventListener("click", async () => {
-    const link = document.getElementById("shareLink").value;
+    const link = shareLinkInput.value;
+    let copied = true;
     try {
       await navigator.clipboard.writeText(link);
     } catch (e) {
-      document.getElementById("shareLink").select();
+      shareLinkInput.select();
+      copied = false;
     }
     const originalText = copyShareLinkBtn.textContent;
-    copyShareLinkBtn.textContent = "Copied!";
+    copyShareLinkBtn.textContent = copied ? "Copied!" : "Press Ctrl+C";
     setTimeout(() => {
       copyShareLinkBtn.textContent = originalText;
     }, 1500);
+  });
+}
+
+const testShareLinkBtn = document.getElementById("testShareLinkBtn");
+if (testShareLinkBtn) {
+  testShareLinkBtn.addEventListener("click", () => {
+    window.open(document.getElementById("shareLink").value, "_blank");
   });
 }
 
@@ -190,6 +377,9 @@ function closeDeleteEventModal() {
 }
 
 if (deleteEventBtn) {
+  document.querySelector('#deleteEventOverlay .modal-panel p').innerHTML =
+    `This permanently deletes <strong>${currentEvent.name}</strong> and all attendee data. This can't be undone. Type <strong>delete</strong> below to confirm.`;
+
   deleteEventBtn.addEventListener("click", () => {
     deleteEventOverlay.hidden = false;
     deleteEventConfirmInput.focus();
@@ -208,6 +398,13 @@ if (deleteEventBtn) {
 
   confirmDeleteEventBtn.addEventListener("click", () => {
     if (confirmDeleteEventBtn.disabled) return;
+    if (typeof deleteEventById === "function") deleteEventById(currentEvent.id);
     window.location.href = "dashboard.html";
   });
 }
+
+renderSidebar();
+renderHeader();
+renderOverview();
+renderArrivalSummary();
+renderSettingsView();

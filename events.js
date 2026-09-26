@@ -50,6 +50,7 @@ const DEFAULT_EVENTS = [
     organizer: "Brooklyn Tech Collective",
     capacity: 150,
     registrationOpen: false,
+    draft: true,
     artClass: "placeholder-art-cool",
   },
 ];
@@ -98,7 +99,13 @@ function loadEvents() {
 }
 
 function saveEvents(events) {
-  localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(events));
+  try {
+    localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(events));
+  } catch (e) {
+    // Most likely a quota overflow from a large uploaded cover image data
+    // URL — surface it instead of silently dropping the save.
+    throw new Error("Couldn't save — your browser's local storage is full. Try a smaller image.");
+  }
 }
 
 function getEventById(id) {
@@ -135,6 +142,48 @@ function slugifyEventName(name) {
 
 function getEventIdFromURL() {
   return new URLSearchParams(window.location.search).get("event");
+}
+
+function formatEventDateShort(dateStr) {
+  const d = new Date(dateStr + "T00:00:00");
+  return d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+}
+
+function formatEventDateLong(dateStr) {
+  const d = new Date(dateStr + "T00:00:00");
+  return d.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+}
+
+function formatEventTime(t) {
+  const [h, m] = t.split(":").map(Number);
+  const period = h >= 12 ? "PM" : "AM";
+  const hour12 = ((h + 11) % 12) + 1;
+  return `${hour12}:${String(m).padStart(2, "0")} ${period}`;
+}
+
+// Uploaded cover photos come straight off a phone/camera and can run several
+// MB each as base64 — easily enough to blow the ~5MB localStorage quota
+// after a couple of events. Downscale to a max dimension and re-encode as
+// JPEG before it ever becomes a data URL.
+function fileToCoverImageDataUrl(file, maxDim = 1600, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error);
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("Couldn't read that image file."));
+      img.onload = () => {
+        const scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(img.naturalWidth * scale);
+        canvas.height = Math.round(img.naturalHeight * scale);
+        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 // Attendees, scoped by eventId, sharing Michelle's ATTENDEES_STORAGE_KEY.
