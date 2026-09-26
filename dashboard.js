@@ -42,8 +42,8 @@ eventGrid.innerHTML = events
             <div class="event-mini-stat"><span class="n">${registered}</span><span class="l">Registered</span></div>
             <div class="event-mini-stat"><span class="n">${checkedIn}</span><span class="l">Checked in</span></div>
             <div class="event-card-actions">
-              <a href="public-event.html?event=${encodeURIComponent(e.id)}" class="btn btn-sm btn-ink">View Attendee Events Page</a>
-              <a href="workspace.html?event=${encodeURIComponent(e.id)}" class="btn btn-sm event-card-action-purple">View Organizer Dashboard</a>
+              <a href="public-event.html?event=${encodeURIComponent(e.id)}" class="btn btn-sm btn-ink">Attendee Registration</a>
+              <a href="workspace.html?event=${encodeURIComponent(e.id)}" class="btn btn-sm event-card-action-purple">Organizer Dashboard</a>
             </div>
           </div>
         </div>

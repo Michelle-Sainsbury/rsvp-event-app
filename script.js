@@ -40,19 +40,17 @@ const eventDetails = realEvent
       endUTC: "20261016T000000Z",
     };
 
-const attendees = JSON.parse(localStorage.getItem("rsvpAttendees")) || [];
-const eventAttendees = attendees.filter((a) => a.eventId === currentEventId);
+let attendees = JSON.parse(localStorage.getItem("rsvpAttendees")) || [];
 const capacity = realEvent ? realEvent.capacity : 80;
-const registeredCount = realEvent ? eventAttendees.length : 54;
-const remaining = Math.max(capacity - registeredCount, 0);
-const pct = capacity ? Math.min(Math.round((registeredCount / capacity) * 100), 100) : 0;
 
-appInfo.innerHTML = `
-  <section class="event-card">
-    <p class="card-desc">${eventDetails.description}</p>
-  </section>
+function renderAvailability() {
+  attendees = JSON.parse(localStorage.getItem("rsvpAttendees")) || [];
+  const eventAttendees = attendees.filter((a) => a.eventId === currentEventId);
+  const registeredCount = realEvent ? eventAttendees.length : 54;
+  const remaining = Math.max(capacity - registeredCount, 0);
+  const pct = capacity ? Math.min(Math.round((registeredCount / capacity) * 100), 100) : 0;
 
-  <section class="event-card availability-card">
+  document.getElementById("availabilityCard").innerHTML = `
     <div class="card-availability">
       <div class="avail-row">
         <span>${registeredCount} of ${capacity} spots filled</span>
@@ -60,8 +58,18 @@ appInfo.innerHTML = `
       </div>
       <div class="progress-bar"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
     </div>
+  `;
+}
+
+appInfo.innerHTML = `
+  <section class="event-card">
+    <p class="card-desc">${eventDetails.description}</p>
   </section>
+
+  <section class="event-card availability-card" id="availabilityCard"></section>
 `;
+
+renderAvailability();
 
 function renderTicket(name, email, ticketId) {
   appForm.innerHTML = `
@@ -78,6 +86,7 @@ function renderTicket(name, email, ticketId) {
   `;
 
   new QRCode(document.getElementById("qrcode"), ticketId);
+  appForm.scrollIntoView({ behavior: "smooth", block: "center" });
   const cancelBtn = document.getElementById("cancelBtn");
   const calendarBtn = document.getElementById("calendarBtn");
 
@@ -98,6 +107,7 @@ function renderTicket(name, email, ticketId) {
     );
 
     localStorage.setItem("rsvpAttendees", JSON.stringify(updatedAttendees));
+    renderAvailability();
 
     appForm.innerHTML = `
       <section class="cancellation">
@@ -162,6 +172,7 @@ function renderRegistrationForm(startExpanded) {
 
     attendees.push(attendee);
     localStorage.setItem("rsvpAttendees", JSON.stringify(attendees));
+    renderAvailability();
     renderTicket(name, email, ticketId);
   });
 }

@@ -13,6 +13,7 @@
   <a href="landing.html" class="wordmark">RSVP</a>
   <span class="guest-brand-sep">|</span>
   <span class="guest-brand-organizer" id="guestBrandOrganizer">Brooklyn Tech Collective</span>
+  <a href="workspace.html" id="guestOrganizerDashboardLink" class="btn btn-secondary btn-sm guest-brand-dashboard-btn">Organizer Dashboard</a>
 </div>
 
 <div class="event-header" id="guestHero">
@@ -61,6 +62,7 @@
       `${formatEventDateLong(event.date)} · ${formatEventTime(event.startTime)} – ${formatEventTime(event.endTime)}`;
     document.getElementById("guestHeroLocation").textContent = event.location;
     document.getElementById("guestBrandOrganizer").textContent = event.organizer;
+    document.getElementById("guestOrganizerDashboardLink").href = `workspace.html?event=${encodeURIComponent(event.id)}`;
 
     const art = document.getElementById("guestHeroArt");
     art.className = `event-header-art ${event.artClass || "placeholder-art"}`;

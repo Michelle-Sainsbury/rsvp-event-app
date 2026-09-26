@@ -20,6 +20,10 @@ body {
   color: var(--color-ink);
 }
 
+.guest-brand-dashboard-btn {
+  margin-left: auto;
+}
+
 .guest-brand-bar .wordmark {
   font-size: 28px;
 }
