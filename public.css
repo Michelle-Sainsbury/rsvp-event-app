@@ -231,9 +231,18 @@ body {
   border-radius: 16px;
   text-align: center;
   background-size: cover;
-  background-position: right top;
+  background-position: 42% center;
   aspect-ratio: 9 / 14.5;
   max-height: 820px;
+}
+
+#app .ticket::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+  z-index: 0;
 }
 
 #app .ticket::after {
@@ -275,7 +284,6 @@ body {
   line-height: 1.05;
   margin-bottom: 10px;
   text-align: left;
-  text-shadow: 0 1px 8px rgba(255, 255, 255, 0.8);
 }
 
 #app .ticket-meta-line {
