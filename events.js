@@ -107,6 +107,15 @@ function eventStartMs(dateStr, timeStr) {
 const SMF_START = eventStartMs("2026-06-14", "10:00");
 const WED_START = eventStartMs("2026-09-12", "17:00");
 
+// SMF_START/WED_START parse to an exact :00.000 second, and every offset
+// above is a clean multiple of a second, so without this every seeded
+// timestamp would end in "000" milliseconds — a dead giveaway it's fake,
+// unlike a real Date.now() which always has real millisecond noise.
+// Deterministic (no Math.random) so seed data stays stable across reloads.
+function seedJitterMs(seed) {
+  return (seed * 137 + 59) % 1000;
+}
+
 // Seed a handful of real (localStorage-backed) attendees per default event so
 // the dashboard/workspace numbers aren't all zero before anyone has actually
 // registered — but these count and check in through the exact same code path
@@ -114,40 +123,54 @@ const WED_START = eventStartMs("2026-09-12", "17:00");
 const DEFAULT_ATTENDEES = [
   // Summer Makers Festival already happened (June 14) — registrations land
   // in the weeks before it, check-ins land during its actual 8-hour window.
-  ...Array.from({ length: 412 }, (_, i) => ({
-    eventId: "summer-makers-festival",
-    name: guestName(i),
-    email: guestEmail(i),
-    ticketId: `SEED-SMF-${1000 + i}`,
-    checkedIn: i < 328,
-    registeredAt: SMF_START - (450 - i) * 60 * 60 * 1000,
-    checkedInAt: i < 328 ? SMF_START + Math.round((i / 328) * 7 * 60) * 60 * 1000 : undefined,
-  })),
+  ...Array.from({ length: 412 }, (_, i) => {
+    const registeredAt = SMF_START - (450 - i) * 60 * 60 * 1000 + seedJitterMs(i);
+    return {
+      eventId: "summer-makers-festival",
+      name: guestName(i),
+      email: guestEmail(i),
+      // Same shape as a real registration's ticket ID (RSVP- + a millisecond
+      // timestamp) — reuses this attendee's own registeredAt so it's a real
+      // timestamp, not an arbitrary sequential number.
+      ticketId: `RSVP-${registeredAt}`,
+      checkedIn: i < 328,
+      registeredAt,
+      checkedInAt: i < 328 ? SMF_START + Math.round((i / 328) * 7 * 60) * 60 * 1000 + seedJitterMs(i + 1000) : undefined,
+    };
+  }),
   // Community Tech Night hasn't happened yet (Oct 15) — people can have
   // registered already, but nobody can be checked in yet.
-  { eventId: "community-tech-night", name: "Jordan Lee", email: "jordan@example.com", ticketId: "SEED-CTN-1001", checkedIn: false, registeredAt: Date.now() - 3 * 24 * 60 * 60 * 1000 },
-  { eventId: "community-tech-night", name: "Priya Shah", email: "priya@example.com", ticketId: "SEED-CTN-1002", checkedIn: false, registeredAt: Date.now() - 2 * 24 * 60 * 60 * 1000 },
-  { eventId: "community-tech-night", name: "Sam Okafor", email: "sam@example.com", ticketId: "SEED-CTN-1003", checkedIn: false, registeredAt: Date.now() - 5 * 24 * 60 * 60 * 1000 },
-  { eventId: "community-tech-night", name: "Casey Kim", email: "casey@example.com", ticketId: "SEED-CTN-1004", checkedIn: false, registeredAt: Date.now() - 26 * 60 * 60 * 1000 },
-  ...Array.from({ length: 8 }, (_, i) => ({
-    eventId: "community-tech-night",
-    name: guestName(i + 20),
-    email: guestEmail(i + 20),
-    ticketId: `SEED-CTN-${1100 + i}`,
-    checkedIn: false,
-    registeredAt: Date.now() - (16 - i) * 6 * 60 * 60 * 1000,
-  })),
+  ...[
+    { name: "Jordan Lee", email: "jordan@example.com", registeredAt: Date.now() - 3 * 24 * 60 * 60 * 1000 + seedJitterMs(1) },
+    { name: "Priya Shah", email: "priya@example.com", registeredAt: Date.now() - 2 * 24 * 60 * 60 * 1000 + seedJitterMs(2) },
+    { name: "Sam Okafor", email: "sam@example.com", registeredAt: Date.now() - 5 * 24 * 60 * 60 * 1000 + seedJitterMs(3) },
+    { name: "Casey Kim", email: "casey@example.com", registeredAt: Date.now() - 26 * 60 * 60 * 1000 + seedJitterMs(4) },
+  ].map((a) => ({ ...a, eventId: "community-tech-night", ticketId: `RSVP-${a.registeredAt}`, checkedIn: false })),
+  ...Array.from({ length: 8 }, (_, i) => {
+    const registeredAt = Date.now() - (16 - i) * 6 * 60 * 60 * 1000 + seedJitterMs(i + 2000);
+    return {
+      eventId: "community-tech-night",
+      name: guestName(i + 20),
+      email: guestEmail(i + 20),
+      ticketId: `RSVP-${registeredAt}`,
+      checkedIn: false,
+      registeredAt,
+    };
+  }),
   // Amara & Leo's wedding already happened (Sep 12) — registrations (RSVPs)
   // land in the months before it; nobody's marked checked in since this
   // event never used the check-in flow.
-  ...Array.from({ length: 12 }, (_, i) => ({
-    eventId: "wedding-celebration",
-    name: guestName(i + 40),
-    email: guestEmail(i + 40),
-    ticketId: `SEED-WED-${1000 + i}`,
-    checkedIn: false,
-    registeredAt: WED_START - (30 - i) * 2 * 24 * 60 * 60 * 1000,
-  })),
+  ...Array.from({ length: 12 }, (_, i) => {
+    const registeredAt = WED_START - (30 - i) * 2 * 24 * 60 * 60 * 1000 + seedJitterMs(i + 3000);
+    return {
+      eventId: "wedding-celebration",
+      name: guestName(i + 40),
+      email: guestEmail(i + 40),
+      ticketId: `RSVP-${registeredAt}`,
+      checkedIn: false,
+      registeredAt,
+    };
+  }),
 ];
 
 function loadEvents() {

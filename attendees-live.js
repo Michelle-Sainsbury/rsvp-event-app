@@ -24,6 +24,16 @@ let attendeesSearchName = "";
 let attendeesSearchEmail = "";
 let attendeesSearchTicket = "";
 
+function formatAttendeeTimestamp(ms) {
+  if (!ms) return "&mdash;";
+  return new Date(ms).toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
 function matchesAttendeesFilter(a) {
   if (attendeesFilter === "checked-in") return a.checkedIn;
   if (attendeesFilter === "not-checked-in") return !a.checkedIn;
@@ -73,9 +83,9 @@ function renderAttendeesTab() {
           <td>${a.name}</td>
           <td>${a.email}</td>
           <td>${a.ticketId}</td>
-          <td>General Admission</td>
           <td><span class="badge ${badgeClass}">${statusLabel}</span></td>
-          <td>&mdash;</td>
+          <td>${formatAttendeeTimestamp(a.registeredAt)}</td>
+          <td>${a.checkedIn ? formatAttendeeTimestamp(a.checkedInAt) : "&mdash;"}</td>
         </tr>
       `;
     })
