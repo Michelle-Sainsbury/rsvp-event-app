@@ -64,11 +64,6 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-.modal-scroll {
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
 .modal-close {
   position: absolute;
   top: 14px;
