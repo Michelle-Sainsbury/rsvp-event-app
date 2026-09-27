@@ -40,14 +40,8 @@ function getCurrentEventAttendees() {
 
 // ---- Sidebar: real event list, current one highlighted ----
 function renderSidebar() {
-  const list = document.getElementById("sidebarEventList");
-  if (!list || typeof loadEvents !== "function") return;
-  list.innerHTML = loadEvents()
-    .map((e) => {
-      const active = e.id === currentEvent.id ? " active" : "";
-      return `<a href="workspace.html?event=${encodeURIComponent(e.id)}" class="sidebar-event-link${active}">${e.name}</a>`;
-    })
-    .join("");
+  if (typeof renderAppSidebar !== "function") return;
+  renderAppSidebar({ activeEventId: currentEvent.id });
 }
 
 // ---- Header: name, date/time, location, art, view-event-page link ----

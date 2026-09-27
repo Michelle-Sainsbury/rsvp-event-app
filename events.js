@@ -198,6 +198,39 @@ function getEventById(id) {
   return loadEvents().find((e) => e.id === id) || null;
 }
 
+// Single source of truth for the app shell's left sidebar (wordmark, Events
+// nav link, event list, create-event button) — dashboard.html, workspace.html,
+// and create-event.html all call this instead of each keeping their own
+// hardcoded copy, so edits here apply everywhere at once instead of risking
+// the three copies drifting apart.
+function renderAppSidebar(options) {
+  options = options || {};
+  const sidebar = document.querySelector(".sidebar");
+  if (!sidebar) return;
+
+  const eventsActive = options.eventsActive ? " active" : "";
+
+  sidebar.innerHTML = `
+    <div class="sidebar-header">
+      <a href="landing.html" class="wordmark">RSVP</a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-events-link${eventsActive}"><svg viewBox="0 0 16 16" fill="none" width="16" height="16"><rect x="2" y="3" width="12" height="11" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M2 6.5h12M5 2v2M11 2v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Events</a>
+      <div class="sidebar-label">Your events</div>
+      <div id="sidebarEventList"></div>
+      <div class="sidebar-divider"></div>
+      <a href="create-event.html" class="btn btn-primary btn-sm sidebar-create-btn">+ Create event</a>
+    </nav>
+  `;
+
+  document.getElementById("sidebarEventList").innerHTML = loadEvents()
+    .map((e) => {
+      const active = e.id === options.activeEventId ? " active" : "";
+      return `<a href="workspace.html?event=${encodeURIComponent(e.id)}" class="sidebar-event-link${active}">${e.name}</a>`;
+    })
+    .join("");
+}
+
 function upsertEvent(event) {
   const events = loadEvents();
   const idx = events.findIndex((e) => e.id === event.id);

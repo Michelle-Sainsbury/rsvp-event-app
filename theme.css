@@ -299,6 +299,11 @@ p {
   width: 100%;
 }
 
+.sidebar-nav a.nav-events-link {
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
 .sidebar-nav a:hover,
 .sidebar-nav button:hover {
   background: var(--color-bg);

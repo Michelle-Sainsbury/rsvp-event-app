@@ -8,15 +8,9 @@ function eventStatusBadge(event) {
   return { label: "Registration closed", cls: "badge-muted" };
 }
 
-const events = loadEvents();
+renderAppSidebar({ eventsActive: true });
 
-const sidebarList = document.getElementById("sidebarEventList");
-sidebarList.innerHTML = events
-  .map(
-    (e) =>
-      `<a href="workspace.html?event=${encodeURIComponent(e.id)}" class="sidebar-event-link">${e.name}</a>`
-  )
-  .join("");
+const events = loadEvents();
 
 const eventGrid = document.getElementById("eventGrid");
 eventGrid.innerHTML = events

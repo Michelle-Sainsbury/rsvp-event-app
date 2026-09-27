@@ -35,6 +35,10 @@
 .event-header-art {
   position: absolute;
   inset: 0;
+  /* The gradient placeholder classes (.placeholder-art etc.) are also used
+     elsewhere with rounded corners, but this full-bleed header is always
+     square regardless of which one gets attached as a fallback. */
+  border-radius: 0;
 }
 
 .event-header-overlay {

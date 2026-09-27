@@ -11,18 +11,7 @@
 <body>
 
 <div class="app-shell">
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <a href="landing.html" class="wordmark">RSVP</a>
-    </div>
-    <nav class="sidebar-nav">
-      <a href="dashboard.html">Events</a>
-      <div class="sidebar-label">Your events</div>
-      <div id="sidebarEventList"></div>
-      <div class="sidebar-divider"></div>
-      <a href="create-event.html" class="btn btn-primary btn-sm sidebar-create-btn">+ Create event</a>
-    </nav>
-  </aside>
+  <aside class="sidebar"></aside>
 
   <main class="main">
     <div class="dashboard-header">
@@ -96,9 +85,7 @@
 
 <script src="events.js"></script>
 <script>
-  document.getElementById("sidebarEventList").innerHTML = loadEvents()
-    .map((e) => `<a href="workspace.html?event=${encodeURIComponent(e.id)}" class="sidebar-event-link">${e.name}</a>`)
-    .join("");
+  renderAppSidebar();
 
   // Holds the newly-picked cover image as a data URL until Publish is
   // clicked, mirroring workspace.js's settings-tab artwork upload.
