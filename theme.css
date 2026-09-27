@@ -142,6 +142,10 @@ p {
   border-color: var(--color-ink);
 }
 
+.btn-organizer-dashboard {
+  border-color: var(--color-ink);
+}
+
 .btn-ink {
   background: var(--color-ink);
   color: var(--color-bg);

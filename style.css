@@ -24,6 +24,16 @@ header p {
   color: #555;
 }
 
+.btn-organizer-dashboard {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 18px;
+  border: 1px solid #1C1B1F;
+  border-radius: 999px;
+  color: #1C1B1F;
+  text-decoration: none;
+}
+
 #app {
   max-width: 900px;
   margin: 0 auto;
