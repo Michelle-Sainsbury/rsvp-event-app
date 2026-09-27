@@ -59,6 +59,10 @@ body {
   font-size: 15px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  /* Bakes in the "90% zoom" density you liked, instead of relying on each
+     visitor's own browser zoom level. Chrome/Edge-only (non-standard CSS
+     property), which is fine since that's what this is being viewed in. */
+  zoom: 0.9;
 }
 
 img {
