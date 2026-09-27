@@ -206,18 +206,23 @@
           <div class="settings-view" data-view="details">
             <div class="detail-row"><span class="detail-label">Event name</span><span class="detail-value" data-field="settingsName">Community Tech Night</span></div>
             <div class="detail-row"><span class="detail-label">Capacity</span><span class="detail-value" data-field="settingsCap">80</span></div>
+            <div class="detail-row"><span class="detail-label">Organizer</span><span class="detail-value" data-field="settingsHost">Brooklyn Tech Collective</span></div>
             <div class="detail-row"><span class="detail-label">Description</span><span class="detail-value" data-field="settingsDesc">Join us for an evening of lightning talks, demos, and networking with Brooklyn's tech community.</span></div>
           </div>
 
           <div class="settings-edit" data-edit-panel="details" hidden>
             <div class="field-row">
-              <div class="field" style="flex:1.4;">
+              <div class="field">
                 <label for="settingsName">Event name</label>
                 <input id="settingsName" type="text" value="Community Tech Night">
               </div>
-              <div class="field" style="margin-bottom:0;">
+              <div class="field">
                 <label for="settingsCap">Capacity</label>
                 <input id="settingsCap" type="number" value="80">
+              </div>
+              <div class="field">
+                <label for="settingsHost">Organizer / host</label>
+                <input id="settingsHost" type="text" value="Brooklyn Tech Collective">
               </div>
             </div>
             <div class="field" style="margin-bottom:0;">
@@ -241,7 +246,6 @@
             <div class="detail-row"><span class="detail-label">Date</span><span class="detail-value" data-field="settingsDateDisplay">Thursday, October 15, 2026</span></div>
             <div class="detail-row"><span class="detail-label">Time</span><span class="detail-value" data-field="settingsTimeDisplay">10:00 AM &ndash; 6:00 PM</span></div>
             <div class="detail-row"><span class="detail-label">Location</span><span class="detail-value" data-field="settingsLoc">Brooklyn, NY</span></div>
-            <div class="detail-row"><span class="detail-label">Organizer</span><span class="detail-value" data-field="settingsHost">Brooklyn Tech Collective</span></div>
           </div>
 
           <div class="settings-edit" data-edit-panel="datetime" hidden>
@@ -262,14 +266,29 @@
                 <label for="settingsLoc">Location</label>
                 <input id="settingsLoc" type="text" value="Brooklyn, NY">
               </div>
-              <div class="field" style="margin-bottom:0;">
-                <label for="settingsHost">Organizer / host</label>
-                <input id="settingsHost" type="text" value="Brooklyn Tech Collective">
-              </div>
             </div>
             <div class="settings-edit-actions">
               <button type="button" class="btn btn-secondary btn-sm" data-cancel="datetime">Cancel</button>
               <button type="button" class="btn btn-primary btn-sm" data-save="datetime">Save</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="form-section-title">Registration</h3>
+          <div class="field" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
+            <label id="registrationOpenLabel" style="margin:0;">Registration open</label>
+            <label class="toggle"><input id="registrationOpenToggle" type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
+          </div>
+          <p id="registrationOpenNotice" class="muted" style="font-size:13px;margin:12px 0 0;">Guests can currently register for this event.</p>
+          <p id="registrationClosedNotice" class="muted" style="font-size:13px;margin:12px 0 0;" hidden>Guests can&rsquo;t register for this event right now.</p>
+
+          <div class="field" style="margin:20px 0 0;">
+            <label for="shareLink">Event link</label>
+            <div class="share-link-row">
+              <input id="shareLink" type="text" readonly value="https://rsvp.app/e/community-tech-night">
+              <button type="button" class="btn btn-secondary btn-sm" id="copyShareLinkBtn">Copy link</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="testShareLinkBtn">Test link</button>
             </div>
           </div>
         </div>
@@ -296,33 +315,7 @@
           </div>
         </div>
 
-        <div class="card">
-          <h3 class="form-section-title">Share &amp; visibility</h3>
-          <div class="field" style="margin-bottom:16px;">
-            <label for="shareLink">Event link</label>
-            <div class="share-link-row">
-              <input id="shareLink" type="text" readonly value="https://rsvp.app/e/community-tech-night">
-              <button type="button" class="btn btn-secondary btn-sm" id="copyShareLinkBtn">Copy link</button>
-              <button type="button" class="btn btn-secondary btn-sm" id="testShareLinkBtn">Test link</button>
-            </div>
-          </div>
-          <div class="field" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
-            <label style="margin:0;">Public event page</label>
-            <label class="toggle"><input id="publicPageToggle" type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3 class="form-section-title">Registration</h3>
-          <div class="field" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
-            <label id="registrationOpenLabel" style="margin:0;">Registration open</label>
-            <label class="toggle"><input id="registrationOpenToggle" type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
-          </div>
-          <p id="registrationOpenNotice" class="muted" style="font-size:13px;margin:12px 0 0;">Guests can currently register for this event.</p>
-          <p id="registrationClosedNotice" class="muted" style="font-size:13px;margin:12px 0 0;" hidden>Guests can&rsquo;t register for this event right now.</p>
-        </div>
-
-        <div class="card" style="grid-column:1 / -1;">
+        <div class="card" style="grid-column: 2 / -1;">
           <h3 class="form-section-title">Delete event</h3>
           <div class="field" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
             <p class="muted" style="font-size:13px;margin:0;">Permanently deletes this event and all attendee data. This can't be undone.</p>

@@ -159,7 +159,7 @@ function render() {
       }
 
       <div class="dev-panel">
-        <p class="dev-panel-label">Dev tools: simulate scanning a QR code</p>
+        <p class="dev-panel-label">Simulate scanning a QR code</p>
         <div class="dev-panel-buttons">
           ${[...attendees.filter((a) => !a.checkedIn).slice(0, 4), ...devFakeAttendees]
             .map(

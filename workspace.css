@@ -624,10 +624,18 @@
    (see workspace.js toggleSettingsEdit). */
 .settings-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1.8fr 1.3fr 1.3fr;
   gap: 20px;
-  max-width: 980px;
-  align-items: start;
+  max-width: 1400px;
+  align-items: stretch;
+}
+
+/* Settings cards' edit forms (Date & location, Event details, etc.) stack
+   one field per line, matching the read-only view state's detail-rows
+   instead of cramming several fields into a side-by-side row. */
+.settings-edit .field-row {
+  flex-direction: column;
+  gap: 0;
 }
 
 @media (max-width: 860px) {
@@ -636,27 +644,11 @@
   }
 }
 
-/* The view/edit panels differ in height (a textarea vs. a single line
-   of text, say), so without this the card would grow or shrink when its
-   "Edit" button is clicked. Stacking both in the same grid cell makes
-   the card size to the taller of the two at all times. */
-.settings-toggle-card {
-  display: grid;
-  grid-template-rows: auto auto;
-}
-
-.settings-toggle-card > .settings-view,
-.settings-toggle-card > .settings-edit {
-  grid-row: 2;
-  grid-column: 1;
-}
-
-.settings-toggle-card > .settings-view[hidden],
-.settings-toggle-card > .settings-edit[hidden] {
-  display: block !important;
-  visibility: hidden;
-  pointer-events: none;
-}
+/* Intentionally no grid-stacking trick here: in the resting (view) state,
+   .settings-grid's default stretch alignment makes each row's cards match
+   the tallest one, but clicking "Edit" lets that one card grow/shrink to
+   fit its own form instead of staying pinned to the view state's height
+   (the [hidden] attribute's default display:none is enough on its own). */
 
 /* Hiding the Edit button while editing (workspace.js) would otherwise
    shrink the header row, since the button is taller than the bare
@@ -727,11 +719,12 @@
 
 .share-link-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
 .share-link-row input {
-  flex: 1;
+  flex: 1 1 100%;
   color: var(--color-muted);
   background: var(--color-bg);
 }

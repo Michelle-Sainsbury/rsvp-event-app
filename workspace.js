@@ -212,13 +212,13 @@ function populateSettingsInputs(section) {
   if (section === "details") {
     document.getElementById("settingsName").value = currentEvent.name;
     document.getElementById("settingsCap").value = currentEvent.capacity;
+    document.getElementById("settingsHost").value = currentEvent.organizer;
     document.getElementById("settingsDesc").value = currentEvent.description;
   } else if (section === "datetime") {
     document.getElementById("settingsDate").value = currentEvent.date;
     document.getElementById("settingsTime").value = currentEvent.startTime;
     document.getElementById("settingsEndTime").value = currentEvent.endTime;
     document.getElementById("settingsLoc").value = currentEvent.location;
-    document.getElementById("settingsHost").value = currentEvent.organizer;
   } else if (section === "artwork") {
     pendingArtworkDataUrl = null;
     document.getElementById("artworkFileInput").value = "";
@@ -274,13 +274,13 @@ function saveSettingsSection(section) {
   if (section === "details") {
     currentEvent.name = document.getElementById("settingsName").value;
     currentEvent.capacity = Number(document.getElementById("settingsCap").value) || 0;
+    currentEvent.organizer = document.getElementById("settingsHost").value;
     currentEvent.description = document.getElementById("settingsDesc").value;
   } else if (section === "datetime") {
     currentEvent.date = document.getElementById("settingsDate").value;
     currentEvent.startTime = document.getElementById("settingsTime").value;
     currentEvent.endTime = document.getElementById("settingsEndTime").value;
     currentEvent.location = document.getElementById("settingsLoc").value;
-    currentEvent.organizer = document.getElementById("settingsHost").value;
   } else if (section === "artwork") {
     if (pendingArtworkDataUrl && pendingArtworkDataUrl !== currentEvent.coverImage) {
       currentEvent.coverImage = pendingArtworkDataUrl;
