@@ -95,6 +95,14 @@ body.landing-page {
   /* placeholder for future event artwork upload */
 }
 
+.hero-devices-img {
+  display: block;
+  width: 185%;
+  max-width: none;
+  height: auto;
+  margin-left: -38%;
+}
+
 .hero-preview-card {
   position: absolute;
   bottom: -16px;
@@ -173,6 +181,7 @@ body.landing-page {
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   padding: 24px 0;
+  margin-top: -60px;
 }
 
 .feature-row .card {
