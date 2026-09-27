@@ -111,12 +111,14 @@ function renderTicket(name, email, ticketId) {
       <h2>Registration Complete!</h2>
       <p><strong>${name}</strong>, you're registered for ${eventDetails.title}.</p>
       <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Ticket ID:</strong> ${ticketId}</p>
+      <p>Bring your QR ticket to the event and have it ready to scan at check-in. Save a screenshot so you can easily show it when you arrive.</p>
     </section>
   `;
 
   appTicket.innerHTML = `
     <section class="event-card">
-      <h2 class="ticket-section-title">Your QR Ticket</h2>
+      <h2 class="ticket-section-title">Your Ticket</h2>
       <div class="ticket ${ticketArtClass}"${ticketArtStyle}>
         <div class="ticket-overlay">
           <h2 class="ticket-event-name">${ticketTitleHtml}</h2>
