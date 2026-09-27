@@ -85,6 +85,7 @@ function checkInAttendee(raw) {
   }
 
   attendee.checkedIn = true;
+  attendee.checkedInAt = Date.now();
   saveRealAttendees();
   checkInMessage = { type: "success", text: `${attendee.name} checked in successfully.` };
   render();
@@ -95,6 +96,7 @@ function checkInAttendee(raw) {
   if (typeof renderOverview === "function") renderOverview();
   if (typeof renderArrivalSummary === "function") renderArrivalSummary();
   if (typeof renderAttendeesTab === "function") renderAttendeesTab();
+  if (typeof renderRecentActivity === "function") renderRecentActivity();
 }
 
 // The attendee table always shows everyone. Search boxes only drive the

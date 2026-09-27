@@ -20,7 +20,18 @@
   --color-purple-bg: #EDE8FA;
   --color-blue-text: #2D6CB0;
   --color-blue-bg: #E3EEFB;
+  --color-yellow-text: #9A7B0A;
+  --color-yellow-bg: #FBF3D4;
+  --color-pink-text: #B6467A;
+  --color-pink-bg: #FBE6F0;
   --color-neutral-fill: #D9D2C2;
+
+  /* Softer, pastel-toned variants of the above — used for chart fills
+     (rings, bars) where the full -text colors read as too dark/saturated. */
+  --color-green-chart: #7FC49A;
+  --color-blue-chart: #8FBFE8;
+  --color-yellow-chart: #E8CC7E;
+  --color-pink-chart: #E8A0C4;
 
   --color-dark-surface: #14120F;
 
@@ -75,7 +86,7 @@ p {
 .wordmark {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 22px;
+  font-size: 28px;
   color: var(--color-ink);
   letter-spacing: -0.02em;
 }
@@ -182,6 +193,11 @@ p {
   color: var(--color-muted);
 }
 
+.badge-blue {
+  background: var(--color-blue-bg);
+  color: var(--color-blue-text);
+}
+
 /* Segmented control */
 .segmented {
   display: inline-flex;
@@ -241,11 +257,11 @@ p {
 }
 
 .sidebar {
-  width: 240px;
+  width: 260px;
   flex-shrink: 0;
   background: var(--color-surface-warm);
   border-right: 1px solid var(--color-border);
-  padding: 24px 16px;
+  padding: 28px 24px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -258,7 +274,7 @@ p {
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 6px;
 }
 
 .sidebar-nav a,
@@ -266,7 +282,7 @@ p {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border-radius: 10px;
   color: var(--color-muted);
   font-weight: 500;
@@ -288,15 +304,15 @@ p {
 .sidebar-nav a.active,
 .sidebar-nav button.active {
   background: rgba(193, 89, 46, 0.1);
-  color: var(--color-accent);
+  color: var(--color-ink);
   font-weight: 600;
-  box-shadow: inset 3px 0 0 var(--color-accent);
+  box-shadow: inset 3px 0 0 var(--color-ink);
 }
 
 .sidebar-divider {
   height: 1px;
   background: var(--color-border);
-  margin: 4px 8px;
+  margin: 12px 8px;
 }
 
 .sidebar-label {
@@ -305,7 +321,8 @@ p {
   letter-spacing: 0.06em;
   color: var(--color-muted);
   padding: 0 12px;
-  margin-top: 8px;
+  margin-top: 16px;
+  margin-bottom: 6px;
 }
 
 .main {
@@ -550,6 +567,16 @@ p {
 .stat-badge-blue {
   background: var(--color-blue-bg);
   color: var(--color-blue-text);
+}
+
+.stat-badge-yellow {
+  background: var(--color-yellow-bg);
+  color: var(--color-yellow-text);
+}
+
+.stat-badge-pink {
+  background: var(--color-pink-bg);
+  color: var(--color-pink-text);
 }
 
 .stat-card .stat-value {

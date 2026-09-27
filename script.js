@@ -176,6 +176,7 @@ function renderRegistrationForm(startExpanded) {
       email: email,
       ticketId: ticketId,
       checkedIn: false,
+      registeredAt: Date.now(),
       eventId: currentEventId
     };
 

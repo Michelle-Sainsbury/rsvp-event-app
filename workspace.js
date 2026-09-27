@@ -100,7 +100,50 @@ function renderOverview() {
   document.getElementById("legendCheckedIn").textContent = `Checked in (${checkedIn})`;
   document.getElementById("legendNotCheckedIn").textContent = `Not checked in (${notCheckedIn})`;
   document.getElementById("checkinRing").style.background =
-    `conic-gradient(var(--color-accent) 0% ${pct}%, var(--color-neutral-fill) ${pct}% 100%)`;
+    `conic-gradient(var(--color-green-chart) 0% ${pct}%, var(--color-yellow-chart) ${pct}% 100%)`;
+
+  const regPct = capacity ? Math.min(Math.round((registered / capacity) * 100), 100) : 0;
+  document.getElementById("registrationRingPct").textContent = `${regPct}%`;
+  document.getElementById("registrationRingLbl").textContent = `of ${capacity}`;
+  document.getElementById("legendRegistered").textContent = `Registered (${registered})`;
+  document.getElementById("legendRemaining").textContent = `Remaining (${remaining})`;
+  document.getElementById("registrationRing").style.background =
+    `conic-gradient(var(--color-blue-chart) 0% ${regPct}%, var(--color-pink-chart) ${regPct}% 100%)`;
+
+  renderRecentActivity();
+}
+
+// Overview tab: most recent registration/check-in events, name + status +
+// time, newest first. Each attendee can contribute up to two entries (one
+// for registering, one for checking in) — merged into a single timeline.
+function renderRecentActivity() {
+  const list = document.getElementById("recentActivityList");
+  if (!list) return;
+
+  const events = [];
+  getCurrentEventAttendees().forEach((a) => {
+    if (a.registeredAt) events.push({ name: a.name, status: "Registered", badgeClass: "badge-blue", time: a.registeredAt });
+    if (a.checkedIn && a.checkedInAt) events.push({ name: a.name, status: "Checked in", badgeClass: "badge-success", time: a.checkedInAt });
+  });
+
+  const recent = events.sort((a, b) => b.time - a.time).slice(0, 3);
+
+  if (!recent.length) {
+    list.innerHTML = `<p class="muted" style="font-size:13px;margin:0;">No activity yet.</p>`;
+    return;
+  }
+
+  list.innerHTML = recent
+    .map(
+      (e) => `
+        <div class="recent-checkin-row">
+          <span class="recent-checkin-name">${e.name}</span>
+          <span class="badge ${e.badgeClass}">${e.status}</span>
+          <span class="recent-checkin-time">${new Date(e.time).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}</span>
+        </div>
+      `
+    )
+    .join("");
 }
 
 // Check-in tab's arrival-summary cards — same real numbers as the Overview
