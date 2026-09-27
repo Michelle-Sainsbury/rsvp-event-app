@@ -43,13 +43,13 @@ const DEFAULT_EVENTS = [
   },
   {
     id: "wedding-celebration",
-    name: "Amara & Leo's Wedding",
-    description: "Join us as we celebrate the marriage of Amara and Leo with an evening of dinner, dancing, and toasts under the stars.",
+    name: "Imani & Leo's Wedding",
+    description: "Join us as we celebrate the marriage of Imani and Leo with an evening of dinner, dancing, and toasts under the stars.",
     date: "2026-09-12",
     startTime: "17:00",
     endTime: "23:00",
     location: "Hudson Valley, NY",
-    organizer: "Amara & Leo",
+    organizer: "Imani & Leo",
     capacity: 120,
     registrationOpen: true,
     draft: false,
@@ -157,7 +157,7 @@ const DEFAULT_ATTENDEES = [
       registeredAt,
     };
   }),
-  // Amara & Leo's wedding already happened (Sep 12) — registrations (RSVPs)
+  // Imani & Leo's wedding already happened (Sep 12) — registrations (RSVPs)
   // land in the months before it; nobody's marked checked in since this
   // event never used the check-in flow.
   ...Array.from({ length: 12 }, (_, i) => {
