@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSVP | Community Tech Night</title>
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="public.css">
+</head>
+<body>
+
+<div class="guest-brand-bar">
+  <a href="landing.html" class="wordmark">RSVP</a>
+  <span class="guest-brand-sep">|</span>
+  <span class="guest-brand-organizer" id="guestBrandOrganizer">Brooklyn Tech Collective</span>
+  <a href="workspace.html" id="guestOrganizerDashboardLink" class="btn btn-secondary btn-sm btn-organizer-dashboard guest-brand-dashboard-btn">Organizer Dashboard</a>
+</div>
+
+<div class="event-header" id="guestHero">
+  <div class="event-header-art placeholder-art" id="guestHeroArt"></div>
+  <div class="event-header-overlay">
+    <div class="event-header-meta">
+      <h1 id="guestHeroName">Community Tech Night</h1>
+      <div class="event-header-sub" id="guestHeroDateTime">Thursday, October 15, 2026 &middot; 10:00 AM &ndash; 6:00 PM</div>
+      <div class="event-header-sub" id="guestHeroLocation">Brooklyn, NY</div>
+    </div>
+  </div>
+</div>
+
+<div class="guest-main">
+
+  <div id="live-registration">
+    <main id="app" class="guest-columns">
+      <div id="appInfo"></div>
+      <div id="appForm"></div>
+      <div id="appTicket"></div>
+    </main>
+  </div>
+
+</div>
+
+<script src="events.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="script.js"></script>
+<script>
+  (function () {
+    const eventId = new URLSearchParams(window.location.search).get("event") || "community-tech-night";
+    const event = typeof getEventById === "function" ? getEventById(eventId) : null;
+    if (!event) return;
+
+    document.title = `RSVP | ${event.name}`;
+
+    const nameEl = document.getElementById("guestHeroName");
+    nameEl.innerHTML = "";
+    const nameWords = event.name.split(" ");
+    nameEl.appendChild(document.createTextNode(nameWords[0]));
+    if (nameWords.length > 1) {
+      nameEl.appendChild(document.createElement("br"));
+      nameEl.appendChild(document.createTextNode(nameWords.slice(1).join(" ")));
+    }
+
+    document.getElementById("guestHeroDateTime").textContent =
+      `${formatEventDateLong(event.date)} · ${formatEventTime(event.startTime)} – ${formatEventTime(event.endTime)}`;
+    document.getElementById("guestHeroLocation").textContent = event.location;
+    document.getElementById("guestBrandOrganizer").textContent = event.organizer;
+    document.getElementById("guestOrganizerDashboardLink").href = `workspace.html?event=${encodeURIComponent(event.id)}`;
+
+    const art = document.getElementById("guestHeroArt");
+    art.className = `event-header-art ${event.artClass || "placeholder-art"}`;
+    if (event.coverImage) {
+      art.style.backgroundImage = `url("${event.coverImage}")`;
+      art.style.backgroundSize = "cover";
+      art.style.backgroundPosition = "center";
+    }
+  })();
+</script>
+</body>
+</html>

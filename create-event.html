@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSVP | Create an event</title>
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="public.css">
+<link rel="stylesheet" href="forms.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main">
+    <div class="dashboard-header">
+      <div>
+        <h1 style="font-size:28px;margin:0;">Create an event</h1>
+        <p class="muted" style="margin:4px 0 0;">Fill in the details below. You can edit everything later from the event workspace.</p>
+      </div>
+    </div>
+
+    <div class="create-event-layout">
+      <form class="card create-event-form">
+        <div class="form-section">
+          <h3 class="form-section-title">Event details</h3>
+          <div class="field-row">
+            <div class="field" style="flex:1.4;">
+              <label for="ceName">Event name</label>
+              <input id="ceName" type="text" placeholder="e.g. Community Tech Night">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="ceCapacity">Capacity</label>
+              <input id="ceCapacity" type="number" placeholder="e.g. 80">
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="ceDesc">Description</label>
+            <textarea id="ceDesc" placeholder="What should guests know before they come?" style="min-height:64px;"></textarea>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Date &amp; location</h3>
+          <div class="field-row">
+            <div class="field">
+              <label for="ceDate">Date</label>
+              <input id="ceDate" type="date">
+            </div>
+            <div class="field">
+              <label for="ceStart">Start time</label>
+              <input id="ceStart" type="time">
+            </div>
+            <div class="field">
+              <label for="ceEnd">End time</label>
+              <input id="ceEnd" type="time">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="ceLocation">Location</label>
+              <input id="ceLocation" type="text" placeholder="e.g. Brooklyn, NY">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="ceHost">Organizer / host</label>
+              <input id="ceHost" type="text" placeholder="e.g. Brooklyn Tech Collective">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section" style="border-bottom:none;padding-bottom:0;">
+          <h3 class="form-section-title">Artwork</h3>
+          <div class="field" style="margin-bottom:0;">
+            <label for="ceArtworkInput" class="upload-box" id="ceArtworkUploadBox" style="padding:16px;display:block;cursor:pointer;">Drop an image or click to upload</label>
+            <input type="file" id="ceArtworkInput" accept="image/*" hidden>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" id="publishEventBtn" class="btn btn-primary">Publish event</button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script src="events.js"></script>
+<script>
+  renderAppSidebar();
+
+  // Holds the newly-picked cover image as a data URL until Publish is
+  // clicked, mirroring workspace.js's settings-tab artwork upload.
+  let ceArtworkDataUrl = null;
+
+  const ceArtworkInput = document.getElementById("ceArtworkInput");
+  const ceArtworkUploadBox = document.getElementById("ceArtworkUploadBox");
+  ceArtworkInput.addEventListener("change", () => {
+    const file = ceArtworkInput.files[0];
+    if (!file) return;
+    fileToCoverImageDataUrl(file)
+      .then((dataUrl) => {
+        ceArtworkDataUrl = dataUrl;
+        ceArtworkUploadBox.innerHTML = `<img src="${ceArtworkDataUrl}" alt="Cover image preview" style="max-height:120px;border-radius:8px;display:block;margin:0 auto;">`;
+      })
+      .catch((e) => alert(e.message || "Couldn't read that image file."));
+  });
+
+  document.getElementById("publishEventBtn").addEventListener("click", () => {
+    const name = document.getElementById("ceName").value.trim();
+    if (!name) {
+      alert("Give the event a name before publishing.");
+      document.getElementById("ceName").focus();
+      return;
+    }
+
+    const event = {
+      id: slugifyEventName(name),
+      name: name,
+      description: document.getElementById("ceDesc").value.trim(),
+      date: document.getElementById("ceDate").value,
+      startTime: document.getElementById("ceStart").value,
+      endTime: document.getElementById("ceEnd").value,
+      location: document.getElementById("ceLocation").value.trim(),
+      organizer: document.getElementById("ceHost").value.trim(),
+      capacity: Number(document.getElementById("ceCapacity").value) || 0,
+      registrationOpen: true,
+      draft: false,
+      artClass: "placeholder-art",
+    };
+    if (ceArtworkDataUrl) event.coverImage = ceArtworkDataUrl;
+
+    try {
+      upsertEvent(event);
+    } catch (e) {
+      alert(e.message || "Couldn't publish this event.");
+      return;
+    }
+    window.location.href = `workspace.html?event=${encodeURIComponent(event.id)}`;
+  });
+</script>
+
+</body>
+</html>

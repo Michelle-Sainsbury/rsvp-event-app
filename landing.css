@@ -1,0 +1,240 @@
+/* Scoped to the landing page only (not the shared .container class used
+   elsewhere) so body fills exactly 100vh and .hero can flex-grow to absorb
+   whatever space nav/steps/footer don't use — giving it natural breathing
+   room without guessing at fixed padding values, and guaranteeing no
+   scroll regardless of viewport height. */
+body.landing-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.landing-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  flex-shrink: 0;
+}
+
+.nav .wordmark {
+  font-size: 44px;
+}
+
+/* This page's primary buttons are black/white, not the app's usual green
+   accent — scoped to body.landing-page so the rest of the app is unaffected. */
+.landing-page .btn-primary {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: #FAF7F2;
+}
+
+.landing-page .btn-primary:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-links a:not(.btn) {
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+.nav-links a:not(.btn):hover {
+  color: var(--color-ink);
+}
+
+.hero {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+  padding: 24px 0;
+}
+
+.hero h1 {
+  font-size: 52px;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+}
+
+.hero-copy p {
+  font-size: 17px;
+  max-width: 46ch;
+  margin-bottom: 28px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hero-visual {
+  position: relative;
+  min-height: 340px;
+}
+
+.hero-backdrop {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  /* placeholder for future event artwork upload */
+}
+
+.hero-devices-img {
+  display: block;
+  width: 185%;
+  max-width: none;
+  height: auto;
+  margin-left: -38%;
+}
+
+.hero-preview-card {
+  position: absolute;
+  bottom: -16px;
+  left: 24px;
+  right: -24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: 0 20px 40px rgba(20, 18, 15, 0.18);
+  padding: 18px;
+}
+
+.hero-preview-card .event-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+
+.hero-preview-card .event-meta {
+  font-size: 13px;
+  color: var(--color-muted);
+  margin-bottom: 10px;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.hero-stat {
+  text-align: center;
+  background: var(--color-bg);
+  border-radius: 12px;
+  padding: 8px 6px;
+}
+
+.hero-stat .n {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  display: block;
+}
+
+.hero-stat .l {
+  font-size: 11px;
+  color: var(--color-muted);
+}
+
+.hero-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--color-muted);
+  margin-bottom: 6px;
+}
+
+.hero-guest-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-top: 1px solid var(--color-border);
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.hero-guest-row .guest-name {
+  font-weight: 500;
+}
+
+.feature-row {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 24px 0;
+  margin-top: -60px;
+}
+
+.feature-row .card {
+  padding: 20px 22px;
+}
+
+.feature-row .card h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.feature-row .card p {
+  font-size: 13px;
+  margin-bottom: 0;
+}
+
+.feature-row .card .step {
+  color: var(--color-accent);
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+footer.site-footer {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 16px 0;
+  color: var(--color-muted);
+  font-size: 12px;
+}
+
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding-top: 16px;
+  }
+  .hero h1 {
+    font-size: 42px;
+  }
+  .hero-visual {
+    min-height: 320px;
+    margin-top: 24px;
+  }
+  .hero-preview-card {
+    right: 0;
+  }
+  .feature-row {
+    grid-template-columns: 1fr;
+  }
+  .nav-links {
+    gap: 16px;
+  }
+  .nav-links span.nav-label {
+    display: none;
+  }
+}

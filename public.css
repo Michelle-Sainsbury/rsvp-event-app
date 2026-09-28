@@ -1,0 +1,525 @@
+body {
+  background: var(--color-bg);
+}
+
+.guest-brand-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 40px;
+}
+
+.guest-brand-sep {
+  color: var(--color-border);
+  font-size: 20px;
+}
+
+.guest-brand-organizer {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.guest-brand-dashboard-btn {
+  margin-left: auto;
+}
+
+.guest-brand-bar .wordmark {
+  font-size: 28px;
+}
+
+.guest-main {
+  width: calc(100% - 48px);
+  margin: 0 auto;
+  padding: 0 0 80px;
+}
+
+.event-header {
+  position: relative;
+  aspect-ratio: 782 / 195;
+  min-height: 195px;
+  overflow: hidden;
+  width: calc(100% - 48px);
+  margin: 8px auto 0;
+  border-radius: var(--radius-card);
+}
+
+.event-header-art {
+  position: absolute;
+  inset: 0;
+}
+
+.event-header-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 12px 40px 80px 60px;
+}
+
+.event-header-meta {
+  margin-top: 10px;
+}
+
+.event-header-meta h1 {
+  font-family: var(--font-display);
+  font-size: 72px;
+  font-weight: 500;
+  font-style: normal;
+  line-height: 0.96;
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+  color: #101010;
+  max-width: 640px;
+  text-align: left;
+}
+
+.event-header-sub {
+  color: var(--color-ink);
+  font-size: 19px;
+  margin-bottom: 3px;
+}
+
+#live-registration {
+  margin-top: 0;
+}
+
+.ticket-hero {
+  height: 200px;
+  border-radius: var(--radius-card);
+}
+
+.ticket-card {
+  max-width: 420px;
+  margin: -60px auto 60px;
+  position: relative;
+  text-align: center;
+  padding: 32px 24px;
+}
+
+.qr-placeholder {
+  width: 180px;
+  height: 180px;
+  margin: 20px auto;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background:
+    repeating-linear-gradient(45deg, #E6E1D8 0, #E6E1D8 6px, #FFFFFF 6px, #FFFFFF 12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-placeholder span {
+  background: var(--color-surface);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+.ticket-id {
+  font-family: var(--font-display);
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  margin: 8px 0 16px;
+}
+
+/* Light, additive styling for script.js's real #app markup (event-card,
+   registration-form, ticket, cancellation) so the embedded live widget
+   matches the page without touching script.js/style.css. */
+
+#app.guest-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: start;
+  gap: 28px;
+  margin-top: 32px;
+}
+
+#app .event-card,
+#app .registration-form {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 28px;
+}
+
+#app .event-card + .event-card {
+  margin-top: 20px;
+}
+
+#appForm .registration-form,
+#appForm .ticket,
+#appForm .cancellation,
+#appTicket .event-card,
+#appTicket .ticket-placeholder,
+#appTicket .cancellation {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  margin: 0;
+}
+
+#appInfo .event-card {
+  align-self: start;
+}
+
+@media (max-width: 860px) {
+  #app.guest-columns {
+    grid-template-columns: 1fr;
+  }
+  #appForm .registration-form,
+  #appForm .ticket,
+  #appForm .cancellation,
+  #appTicket .event-card,
+  #appTicket .ticket-placeholder,
+  #appTicket .cancellation {
+    position: static;
+  }
+}
+
+#app .ticket-placeholder {
+  background: var(--color-surface);
+  border: 1.5px dashed var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+#app .ticket-placeholder-icon {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-muted);
+}
+
+#app .ticket-placeholder p {
+  font-size: 13px;
+  margin: 0;
+}
+
+#app .cancellation {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 28px;
+  text-align: center;
+}
+
+.ticket-section-title {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+#app .ticket {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 16px;
+  text-align: center;
+  background-size: cover;
+  background-position: 42% center;
+  aspect-ratio: 9 / 14.5;
+  max-height: 820px;
+}
+
+#app .ticket::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#app .ticket::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 65%;
+  background: linear-gradient(to top,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.65) 20%,
+    rgba(0, 0, 0, 0.4) 40%,
+    rgba(0, 0, 0, 0.2) 60%,
+    rgba(0, 0, 0, 0.08) 80%,
+    transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#app .ticket-overlay {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  padding: 56px 24px 24px 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+#app .ticket-overlay h2,
+#app .ticket-overlay p,
+#app .ticket-overlay p strong {
+  color: var(--color-ink);
+}
+
+#app .ticket-event-name {
+  font-size: 47px;
+  font-weight: 500;
+  line-height: 1.05;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+#app .ticket-meta-line {
+  text-align: left;
+}
+
+#app .ticket-meta-line {
+  font-size: 17px;
+  margin-bottom: 4px;
+}
+
+#app .ticket-meta-line:first-of-type {
+  margin-top: 14px;
+}
+
+#app .ticket-meta-line:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Fixed, explicit square (not padding-derived) so it can never render
+   taller/wider than intended regardless of what the QR library itself
+   produces internally. */
+#app .ticket-qr-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 252px;
+  height: 252px;
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: 12px;
+  margin: 48px auto 14px;
+}
+
+#app .ticket #qrcode {
+  width: 200px;
+  height: 200px;
+}
+
+#app .ticket #qrcode img,
+#app .ticket #qrcode canvas,
+#app .ticket #qrcode table {
+  display: block;
+  width: 200px !important;
+  height: 200px !important;
+}
+
+#app .ticket-guest-card {
+  align-self: center;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
+  margin-top: 24px;
+}
+
+#app .ticket-guest-name.ticket-guest-name {
+  font-weight: 700;
+  font-size: 27px;
+  margin-bottom: 6px;
+  color: #fff;
+}
+
+#app .ticket-guest-type.ticket-guest-type {
+  font-size: 19px;
+  margin-bottom: 4px;
+  color: #fff;
+  opacity: 1;
+}
+
+#app .ticket-guest-id.ticket-guest-id {
+  font-size: 19px;
+  color: #fff;
+  margin-bottom: 0;
+}
+
+#app .ticket-actions {
+  margin-top: 20px;
+}
+
+#app .ticket-delete-link {
+  background: transparent;
+  border: none;
+  color: var(--color-muted);
+  font-weight: 500;
+  padding: 8px;
+}
+
+#app .ticket-delete-link:hover {
+  color: var(--color-ink);
+  text-decoration: underline;
+}
+
+#app .card-facts {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+#app .card-facts .label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+  margin-bottom: 4px;
+}
+
+#app .card-facts .value {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+#app .card-divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 20px 0;
+}
+
+#app .card-divider.dashed {
+  height: 0;
+  border-top: 1px dashed var(--color-border);
+  background: none;
+  margin: 24px 0 20px;
+}
+
+#app .card-desc {
+  color: var(--color-muted);
+  font-size: 17px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+#app .card-detail-row {
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--color-border);
+}
+
+#app .card-detail-row:last-child {
+  border-bottom: none;
+}
+
+#app .card-detail-label {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+  margin-bottom: 4px;
+}
+
+#app .card-detail-value {
+  display: block;
+  font-size: 17px;
+  color: var(--color-ink);
+}
+
+#app .card-availability {
+  margin-top: 0;
+}
+
+#app .card-availability .avail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--color-muted);
+  margin-bottom: 6px;
+}
+
+#app .registration-form h2 {
+  margin-bottom: 16px;
+}
+
+#app .registration-form p {
+  font-size: 17px;
+}
+
+#app .reg-fields {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+}
+
+#app .reg-fields.expanded {
+  max-height: 260px;
+  opacity: 1;
+}
+
+#app label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+#app input[type="text"],
+#app input[type="email"] {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  margin: 0 0 16px;
+}
+
+#app button {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: var(--radius-pill);
+  padding: 12px 26px;
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  cursor: pointer;
+}
+
+#app #qrcode {
+  margin: 16px 0;
+}
+
+#app #calendarBtn,
+#app #cancelBtn {
+  font-size: 17px;
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+}
+
+#app #calendarBtn,
+#app #registerBtn {
+  font-size: 17px;
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-bg);
+}

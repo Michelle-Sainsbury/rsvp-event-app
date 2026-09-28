@@ -1,0 +1,187 @@
+.sidebar-event-link {
+  font-size: 13px;
+  padding-left: 20px;
+  color: var(--color-muted);
+}
+
+.sidebar-create-btn {
+  margin-top: 4px;
+}
+
+.dashboard-main {
+  padding-top: 14px;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.dashboard-create-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 34px;
+  border-radius: 10px;
+  color: var(--color-ink);
+  font-weight: 500;
+  font-size: 16px;
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(196, 96, 122, 0.3);
+  transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+}
+
+.event-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.event-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: stretch;
+}
+
+/* Colored drop shadows cycling through the pastel chart palette
+   (blue/pink/green-chart from theme.css), so cards don't all look
+   identical in a long stacked list. */
+.event-card:nth-child(3n+1) {
+  box-shadow: 0 6px 14px rgba(127, 196, 154, 0.55);
+}
+
+.event-card:nth-child(3n+2) {
+  box-shadow: 0 6px 14px rgba(143, 191, 232, 0.6);
+}
+
+.event-card:nth-child(3n+3) {
+  box-shadow: 0 6px 14px rgba(232, 160, 196, 0.6);
+}
+
+.event-card-art {
+  position: relative;
+  width: 520px;
+  flex-shrink: 0;
+  background-color: var(--color-bg);
+  overflow: hidden;
+}
+
+.event-card-art-fill {
+  position: absolute;
+  inset: -20px;
+  background-size: cover;
+  background-position: right center;
+}
+
+.event-card-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.65) 100%);
+  pointer-events: none;
+}
+
+.event-card-body {
+  flex: 1;
+  min-width: 0;
+  padding: 32px 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.event-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.event-card-top .badge {
+  flex-shrink: 0;
+}
+
+.event-card-body h3 {
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  margin-bottom: 0;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-card-meta {
+  font-size: 13px;
+  color: var(--color-muted);
+  margin-bottom: 18px;
+}
+
+.event-mini-stats {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+.event-mini-stat {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.event-card-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.event-card-action-purple {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  border-color: var(--color-ink);
+}
+
+.event-card-action-purple:hover {
+  background: var(--color-bg);
+}
+
+@media (max-width: 640px) {
+  .event-card {
+    flex-direction: column;
+  }
+  .event-card-art {
+    width: 100%;
+    height: 140px;
+  }
+}
+
+.event-mini-stat .n {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  display: block;
+}
+
+.event-mini-stat .l {
+  font-size: 11px;
+  color: var(--color-muted);
+}

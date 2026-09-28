@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSVP | Your ticket</title>
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="public.css">
+</head>
+<body>
+
+<div class="ticket-hero placeholder-art" style="border-radius:0;"></div>
+
+<div id="ticketCard" class="ticket-card card">
+  <p class="muted">Loading your ticket&hellip;</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  // Shows the real, most recently registered guest from the same
+  // localStorage records script.js (index.html's registration flow) writes.
+  // No fake example data here — if no one's registered, we say so.
+  (function () {
+    let attendees = [];
+    try {
+      attendees = JSON.parse(localStorage.getItem("rsvpAttendees")) || [];
+    } catch (e) {}
+
+    const card = document.getElementById("ticketCard");
+    const attendee = attendees[attendees.length - 1];
+
+    if (!attendee) {
+      card.innerHTML = `
+        <p class="muted" style="text-transform:uppercase;letter-spacing:0.06em;font-size:12px;margin-bottom:6px;">No ticket yet</p>
+        <h1 style="font-size:24px;">You haven't registered</h1>
+        <p class="muted" style="font-size:13px;">Register for Community Tech Night to get your ticket and QR code here.</p>
+        <a href="public-event.html" class="btn btn-primary btn-block">Go to event page</a>
+      `;
+      return;
+    }
+
+    card.innerHTML = `
+      <p class="muted" style="text-transform:uppercase;letter-spacing:0.06em;font-size:12px;margin-bottom:6px;">You're going</p>
+      <h1 style="font-size:24px;">Community Tech Night</h1>
+      <p class="muted" style="font-size:13px;margin-bottom:0;">Thursday, October 15, 2026 &middot; 10:00 AM</p>
+      <p class="muted" style="font-size:13px;">Brooklyn, NY</p>
+
+      <div id="qrcode" class="qr-placeholder"></div>
+
+      <p style="color:var(--color-ink);font-weight:600;margin-bottom:2px;">${attendee.name}</p>
+      <div class="ticket-id">${attendee.ticketId}</div>
+
+      <a href="public-event.html" class="btn btn-secondary btn-block">Back to event page</a>
+
+      <p class="muted" style="font-size:12px;margin-top:20px;margin-bottom:0;">
+        No Add to Wallet button yet &mdash; that's coming once wallet support actually works.
+      </p>
+    `;
+
+    new QRCode(document.getElementById("qrcode"), attendee.ticketId);
+  })();
+</script>
+
+</body>
+</html>
