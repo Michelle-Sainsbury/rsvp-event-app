@@ -45,11 +45,22 @@ const eventDetails = realEvent
       artClass: "placeholder-art",
     };
 
-let attendees = JSON.parse(localStorage.getItem("rsvpAttendees")) || [];
+// Goes through events.js's loadAllAttendees() (not a raw localStorage read)
+// so its seed-if-empty check runs first. Reading rsvpAttendees directly here
+// would "poison" it: the very first registration on a fresh domain writes a
+// 1-item array, and loadAllAttendees() only ever seeds when the key is
+// completely empty — so the full demo dataset would never load after that.
+function loadStoredAttendees() {
+  return typeof loadAllAttendees === "function"
+    ? loadAllAttendees()
+    : JSON.parse(localStorage.getItem("rsvpAttendees")) || [];
+}
+
+let attendees = loadStoredAttendees();
 const capacity = realEvent ? realEvent.capacity : 80;
 
 function renderAvailability() {
-  attendees = JSON.parse(localStorage.getItem("rsvpAttendees")) || [];
+  attendees = loadStoredAttendees();
   const eventAttendees = attendees.filter((a) => a.eventId === currentEventId);
   const registeredCount = realEvent ? eventAttendees.length : 54;
   const remaining = Math.max(capacity - registeredCount, 0);
